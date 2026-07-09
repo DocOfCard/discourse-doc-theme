@@ -328,9 +328,15 @@ img.avatar {
   }
 
   .topic-item-metadata.right > .topic-item-stats .gf-native-tag-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex: 0 0 auto;
-    margin: 0;
-    align-self: center;
+    width: 0.88em;
+    height: 0.88em;
+    margin: 0 2px 0 0;
+    line-height: 1;
+    vertical-align: middle;
     transform: none;
   }
 
