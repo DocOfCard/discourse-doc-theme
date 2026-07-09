@@ -141,16 +141,36 @@ async function fetchLastReplyExcerpt(topicId) {
 
   const promise = fetch("/t/" + topicId + ".json", { credentials: "same-origin" })
     .then((response) => (response.ok ? response.json() : null))
-    .then((data) => {
+    .then(async (data) => {
       const posts = data?.post_stream?.posts || [];
       const visiblePosts = posts.filter((post) => !post.hidden);
-      const lastPost = visiblePosts[visiblePosts.length - 1];
+      const replyPosts = visiblePosts.filter((post) => Number(post.post_number) > 1);
+      let lastReply = replyPosts[replyPosts.length - 1];
 
-      if (!lastPost) {
+      if (!lastReply) {
+        const stream = data?.post_stream?.stream || [];
+        const lastPostId = stream[stream.length - 1];
+
+        if (lastPostId) {
+          const postResponse = await fetch("/posts/" + lastPostId + ".json", {
+            credentials: "same-origin",
+          });
+
+          if (postResponse.ok) {
+            const postData = await postResponse.json();
+
+            if (Number(postData?.post_number) > 1 && !postData?.hidden) {
+              lastReply = postData;
+            }
+          }
+        }
+      }
+
+      if (!lastReply) {
         return "";
       }
 
-      return plainTextFromCooked(lastPost.cooked).slice(0, 180);
+      return plainTextFromCooked(lastReply.cooked).slice(0, 180);
     })
     .catch(() => "");
 
