@@ -148,6 +148,14 @@ pre {
   }
 }
 
+#create-topic .d-icon {
+  color: var(--primary) !important;
+}
+
+#create-topic:hover .d-icon {
+  color: var(--tertiary) !important;
+}
+
 #reply-control {
   border-radius: 10px 10px 0 0;
 
