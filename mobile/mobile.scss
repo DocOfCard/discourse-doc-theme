@@ -12,13 +12,13 @@ body {
 #main-outlet-wrapper.wrap {
   box-sizing: border-box;
   margin: 0;
-  padding: 8px;
+  padding: 5px 2px 5px 2px;
 }
 
 #main-outlet {
   box-sizing: border-box;
   margin: 0 auto 1em;
-  padding: 10px 8px 14px 8px !important;
+  padding: 8px 5px 8px 5px !important;
   width: 100%;
   max-width: 100%;
   overflow: visible;
@@ -198,7 +198,7 @@ img.avatar {
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
-    padding: var(--gf-topic-row-padding, 8px) !important;
+    padding: 3px !important;
     overflow: hidden;
     border: 1px solid rgb(var(--primary-rgb), 0.12);
     border-radius: var(--gf-topic-avatar-radius);
