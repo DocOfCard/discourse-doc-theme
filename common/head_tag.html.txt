@@ -1,0 +1,303 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap" rel="stylesheet">
+
+<style>
+/* Graceful Theme Doc Mod v11.0.13 supplemental common styles */
+.topic-list .link-bottom-line.topic-item-stats::before,
+.topic-list .gf-topic-meta::before,
+.topic-list .topic-item-metadata.right > .topic-item-stats::before {
+  display: none !important;
+  content: none !important;
+}
+
+.topic-list .gf-topic-meta .badge-category__wrapper,
+.topic-list .gf-topic-meta .badge-category,
+.topic-list .gf-topic-meta .badge-category__name,
+.topic-list .topic-item-metadata.right > .topic-item-stats .badge-category__wrapper,
+.topic-list .topic-item-metadata.right > .topic-item-stats .badge-category,
+.topic-list .topic-item-metadata.right > .topic-item-stats .badge-category__name {
+  color: var(--category-badge-color) !important;
+}
+
+/* Experiment branch: mobile native meta prototype. */
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right {
+  padding-right: 0 !important;
+}
+
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .pull-right {
+  display: none !important;
+}
+
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .badge-category,
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .badge-category__name,
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .discourse-tag {
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-variant: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  line-height: 1.25 !important;
+  text-transform: none !important;
+}
+
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .badge-category img.emoji,
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .badge-category .d-icon,
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .badge-category svg,
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .discourse-tag .d-icon,
+.mobile-view #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats .discourse-tag svg {
+  width: 0.88em !important;
+  height: 0.88em !important;
+  font-size: 0.88em !important;
+  line-height: 1 !important;
+  vertical-align: -0.08em !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-mobile-meta-status,
+.mobile-view #main-outlet .topic-list .gf-mobile-views-badge,
+.mobile-view #main-outlet .topic-list .gf-mobile-replies-badge,
+.mobile-view #main-outlet .topic-list .gf-mobile-time-icon {
+  display: none !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-time,
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  gap: 3px !important;
+  min-width: max-content !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-time {
+  color: var(--primary-medium) !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-time {
+  order: 99 !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies {
+  order: 98 !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-time .age,
+.mobile-view #main-outlet .topic-list .gf-native-meta-time a,
+.mobile-view #main-outlet .topic-list .gf-native-meta-time .relative-date,
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies .num.posts,
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies .badge-posts,
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies a,
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies .number {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-time .age,
+.mobile-view #main-outlet .topic-list .gf-native-meta-time a,
+.mobile-view #main-outlet .topic-list .gf-native-meta-time .relative-date {
+  color: inherit !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies .num.posts::before,
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies .posts::before,
+.mobile-view #main-outlet .topic-list .gf-native-meta-replies .badge-posts::before {
+  content: none !important;
+  display: none !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-time > .gf-native-meta-icon {
+  display: none !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 0.88em !important;
+  height: 0.88em !important;
+  color: var(--primary-low-mid) !important;
+  opacity: 0.75 !important;
+  line-height: 1 !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-meta-icon svg {
+  width: 0.88em !important;
+  height: 0.88em !important;
+  color: currentColor !important;
+  fill: currentColor !important;
+}
+</style>
+<script>
+  (() => {
+    const key = "__gfNativeMobileTopicMetaExperiment";
+    const previous = window[key];
+
+    if (previous?.cleanup) {
+      previous.cleanup();
+    }
+
+    const iconHtml = (id) =>
+      `<span class="gf-native-meta-icon" aria-hidden="true"><svg class="fa d-icon d-icon-${id} svg-icon svg-string" width="1em" height="1em" aria-hidden="true"><use href="#${id}"></use></svg></span>`;
+
+    const shortRelativeTime = (timestamp) => {
+      if (!Number.isFinite(timestamp)) {
+        return "";
+      }
+
+      const diff = Math.max(0, Date.now() - timestamp);
+      const minute = 60 * 1000;
+      const hour = 60 * minute;
+      const day = 24 * hour;
+
+      if (diff < minute) {
+        return "<1m";
+      }
+
+      if (diff < hour) {
+        return Math.floor(diff / minute) + "m";
+      }
+
+      if (diff < day) {
+        return Math.floor(diff / hour) + "h";
+      }
+
+      return Math.floor(diff / day) + "d";
+    };
+
+    const restoreNativeTime = (activity) => {
+      if (!activity) {
+        return null;
+      }
+
+      if (activity.dataset.gfOriginalHtml && activity.querySelector(".gf-mobile-time-text")) {
+        activity.innerHTML = activity.dataset.gfOriginalHtml;
+      }
+
+      activity.classList.add("gf-native-meta-time");
+      activity.classList.remove("gf-mobile-meta-time");
+
+      const relativeDate = activity.querySelector(".relative-date[data-time]");
+      const timestamp = Number.parseInt(relativeDate?.dataset.time || "", 10);
+      const shortText = shortRelativeTime(timestamp);
+
+      if (relativeDate && shortText) {
+        const replacement = relativeDate.cloneNode(false);
+        replacement.textContent = shortText;
+        relativeDate.replaceWith(replacement);
+      }
+
+      return activity;
+    };
+
+    const buildReplyMeta = (pullRight) => {
+      const nativePosts = pullRight?.querySelector(".num.posts");
+      if (!nativePosts) {
+        return null;
+      }
+
+      let replyMeta = pullRight.querySelector(".gf-native-meta-replies");
+      if (!replyMeta) {
+        replyMeta = document.createElement("span");
+        replyMeta.className = "gf-native-meta-replies";
+        replyMeta.innerHTML = iconHtml("far-comment");
+        replyMeta.append(nativePosts);
+      } else if (!replyMeta.contains(nativePosts)) {
+        replyMeta.append(nativePosts);
+      }
+
+      return replyMeta;
+    };
+
+    const patch = () => {
+      if (!document.documentElement.classList.contains("mobile-view")) {
+        return;
+      }
+
+      document
+        .querySelectorAll(".topic-list tbody.topic-list-body > tr.topic-list-item")
+        .forEach((row) => {
+          const stats = row.querySelector(".topic-item-metadata.right > .topic-item-stats");
+          const pullRight = row.querySelector(".topic-item-metadata.right > .pull-right");
+
+          if (!stats || !pullRight) {
+            return;
+          }
+
+          row.querySelector(".gf-mobile-meta-status")?.remove();
+          row.querySelector(".gf-mobile-replies-badge")?.remove();
+          row.querySelector(".gf-mobile-views-badge")?.remove();
+
+          const time = restoreNativeTime(stats.querySelector(".activity, .gf-mobile-meta-time"));
+          const replies = buildReplyMeta(pullRight);
+
+          if (replies && replies.parentElement !== stats) {
+            stats.append(replies);
+          }
+
+          if (time && time.parentElement !== stats) {
+            stats.append(time);
+          }
+        });
+    };
+
+    let timer = null;
+    let frame = null;
+
+    const schedule = () => {
+      clearTimeout(timer);
+      if (frame) {
+        cancelAnimationFrame(frame);
+      }
+
+      frame = requestAnimationFrame(() => {
+        patch();
+        timer = setTimeout(patch, 250);
+      });
+    };
+
+    const observer = new MutationObserver(schedule);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    window.addEventListener("resize", schedule, { passive: true });
+    window.addEventListener("orientationchange", schedule, { passive: true });
+    window.visualViewport?.addEventListener("resize", schedule, { passive: true });
+
+    window[key] = {
+      cleanup() {
+        clearTimeout(timer);
+        if (frame) {
+          cancelAnimationFrame(frame);
+        }
+        observer.disconnect();
+        window.removeEventListener("resize", schedule);
+        window.removeEventListener("orientationchange", schedule);
+        window.visualViewport?.removeEventListener("resize", schedule);
+      },
+    };
+
+    schedule();
+  })();
+</script>
