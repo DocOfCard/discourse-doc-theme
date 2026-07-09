@@ -1,0 +1,349 @@
+/* Graceful Theme Doc Mod v11.0.32 */
+@use "sass:color";
+
+// Big thanks to jsthon for the initial work on this https://meta.discourse.org/u/jsthon/
+
+@mixin box-shadow($value: 8px) {
+  box-shadow: 0 1px $value rgb(black, 0.18);
+}
+
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(
+    --gf-primary-very-low-or-primary-low,
+    $primary-very-low
+  );
+
+  @if $no-background-image == "false" {
+    @if $background-image != "default" {
+      // Thanks @tmoko!
+      background-image: url($background-image);
+    } @else {
+      // Default background pattern from Toptal Subtle Patterns
+      // https://www.toptal.com/designers/subtlepatterns/japanese-asanoha/
+      background-image: var(--default-background-dynamic);
+    }
+
+    @if $tile-background == "true" {
+      background-size: auto;
+    } @else {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+  }
+}
+
+#main {
+  z-index: 1;
+}
+
+#main-outlet-wrapper {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 8px;
+}
+
+.topic-list-body {
+  border-width: 4px;
+}
+
+#main-outlet {
+  box-sizing: border-box;
+  margin: 0 auto;
+  background: var(--secondary);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 1024px;
+  padding: 0;
+
+  .archetype-regular & {
+    min-height: 500px;
+  }
+
+  @include box-shadow;
+}
+
+code,
+pre {
+  white-space: pre-wrap;
+}
+
+.container.posts > .row {
+  width: 100%;
+}
+
+:root {
+  --d-hover: var(--tertiary-low);
+  --gf-topic-avatar-size: 44px;
+  --gf-topic-avatar-gap: 10px;
+  --gf-topic-avatar-radius: 6px;
+  --gf-topic-title-font-size: 1.07em;
+  --gf-topic-title-meta-gap: 6px;
+  --gf-topic-title-line-height: 1.22;
+  --gf-topic-meta-font-size: 0.86em;
+  --gf-topic-meta-line-height: 1.2;
+  --gf-topic-meta-row-gap: 4px;
+  --gf-topic-meta-column-gap: 8px;
+  --gf-topic-row-padding: 8px;
+  --gf-topic-row-padding-block: 8px;
+  --gf-topic-row-padding-inline: 8px;
+
+  --d-button-default-text-color: var(--primary);
+  --d-button-default-text-color--hover: var(--tertiary);
+  --d-button-default-bg-color: var(--secondary);
+  --d-button-default-bg-color--hover: var(--tertiary-low);
+  --d-button-default-icon-color: var(--primary-high);
+  --d-button-default-icon-color--hover: var(--tertiary);
+
+  --d-button-primary-text-color: var(--secondary);
+  --d-button-primary-text-color--hover: var(--tertiary);
+  --d-button-primary-bg-color: var(--tertiary);
+  --d-button-primary-bg-color--hover: var(--tertiary-low);
+  --d-button-primary-icon-color: var(--secondary);
+  --d-button-primary-icon-color--hover: var(--tertiary);
+}
+
+.topic-list {
+  .gf-topic-left .title,
+  .topic-item-metadata.right > .main-link .title,
+  .topic-item-metadata.right > .topic-list-main-link .title,
+  .topic-item-metadata.right > .topic-list-main-link a.title {
+    font-size: var(--gf-topic-title-font-size);
+    line-height: var(--gf-topic-title-line-height);
+  }
+
+  .gf-topic-meta .badge-category__wrapper,
+  .gf-topic-meta .badge-category,
+  .gf-topic-meta .badge-category__name,
+  .gf-topic-meta .badge-category .d-icon,
+  .topic-item-metadata.right > .topic-item-stats .badge-category__wrapper,
+  .topic-item-metadata.right > .topic-item-stats .badge-category,
+  .topic-item-metadata.right > .topic-item-stats .badge-category__name,
+  .topic-item-metadata.right > .topic-item-stats .badge-category .d-icon {
+    color: var(--category-badge-color) !important;
+  }
+
+  .gf-topic-meta .badge-category.--style-square::before,
+  .gf-topic-meta .badge-category.--style-bar::before,
+  .topic-item-metadata.right > .topic-item-stats .badge-category.--style-square::before,
+  .topic-item-metadata.right > .topic-item-stats .badge-category.--style-bar::before {
+    background-color: var(--category-badge-color) !important;
+  }
+}
+
+.btn-default {
+  border: 1px solid var(--primary-low);
+}
+
+.btn-primary {
+  .discourse-no-touch & {
+    &:hover {
+      border-color: var(--tertiary);
+    }
+  }
+}
+
+#reply-control {
+  border-radius: 10px 10px 0 0;
+
+  .select-kit.dropdown-select-box .dropdown-select-box-header {
+    color: var(--primary-medium);
+
+    &:hover {
+      background: var(--tertiary-low);
+    }
+  }
+
+  .d-editor-button-bar {
+    .select-kit.dropdown-select-box .dropdown-select-box-header {
+      border: none;
+    }
+
+    button {
+      color: var(--primary-medium);
+      border: none;
+    }
+  }
+}
+
+.open .grippie {
+  border-radius: 10px 10px 0 0;
+  opacity: 0.4;
+
+  &::before {
+    border-color: var(--gf-primary-low-or-low-mid, $primary-low);
+  }
+}
+
+.d-editor-button-bar .btn {
+  border: none;
+  color: var(--tertiary);
+
+  .d-icon {
+    color: var(--tertiary);
+  }
+
+  &:hover {
+    background: var(--tertiary-low);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+}
+
+header.d-header {
+  @include box-shadow;
+
+  .contents {
+    display: flex;
+    align-items: center;
+  }
+
+  .panel {
+    margin-left: auto;
+    order: 5;
+
+    .rtl & {
+      margin-left: 0;
+    }
+  }
+}
+
+.d-header-icons .icon:hover {
+  background: var(--tertiary-low);
+
+  .d-icon {
+    color: var(--tertiary);
+  }
+}
+
+.badge-wrapper.box {
+  padding: 2px 6px 2px 5px;
+
+  span {
+    border-radius: 4px;
+  }
+}
+
+.deleted .topic-body {
+  background-color: var(--danger-hover, $danger-hover);
+}
+
+.navigation-controls {
+  .fk-d-button-tooltip {
+    button {
+      height: 100%;
+    }
+  }
+}
+
+#list-area {
+  margin-bottom: 0;
+}
+
+// Match the uploaded reference theme controls: smaller boxes, lighter text, no heavy shadow.
+#main-outlet .list-controls {
+  margin: 0;
+  padding: 0 !important;
+
+  .navigation-container {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .category-breadcrumb,
+  .navigation-controls {
+    margin: 0 !important;
+  }
+
+  .combo-box .combo-box-header,
+  .select-kit.combo-box.category-drop .category-drop-header,
+  .select-kit.combo-box.tag-drop .tag-drop-header,
+  .mobile-nav,
+  .select-kit-header,
+  .navigation-controls .btn,
+  .navigation-controls button,
+  #create-topic {
+    box-sizing: border-box !important;
+    min-height: 30px !important;
+    height: 30px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border: 1px solid var(--primary-low-mid) !important;
+    border-radius: 5px !important;
+    background: var(--secondary) !important;
+    box-shadow: none !important;
+    color: var(--primary) !important;
+    font-size: 0.94rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .combo-box .combo-box-header,
+  .select-kit.combo-box.category-drop .category-drop-header,
+  .select-kit.combo-box.tag-drop .tag-drop-header,
+  .mobile-nav,
+  .select-kit-header {
+    padding-left: 0.55rem !important;
+    padding-right: 0.55rem !important;
+  }
+
+  .navigation-controls .btn,
+  .navigation-controls button,
+  #create-topic {
+    padding-left: 0.7rem !important;
+    padding-right: 0.7rem !important;
+  }
+
+  .nav-pills > li {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .nav-pills > li > a,
+  .nav-pills > li button {
+    min-height: 30px !important;
+    height: 30px !important;
+    padding: 0.25rem 0.45rem !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 0.94rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .nav-pills > li.active > a,
+  .nav-pills > li > a.active {
+    color: var(--tertiary) !important;
+    border-bottom: 2px solid var(--tertiary) !important;
+  }
+
+  .d-icon {
+    opacity: 0.78;
+  }
+}
+
+.desktop-view {
+  .topic-list .gf-topic-left .title,
+  .topic-list .topic-item-metadata.right > .main-link .title,
+  .topic-list .topic-item-metadata.right > .topic-list-main-link .title,
+  .topic-list .topic-item-metadata.right > .topic-list-main-link a.title {
+    font-size: 20px;
+    line-height: 1.22;
+  }
+}
