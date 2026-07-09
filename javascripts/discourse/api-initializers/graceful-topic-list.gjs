@@ -130,36 +130,71 @@ const gfViewsHeatClass = helper(function ([topic]) {
 
 const desktopExcerptCache = new Map();
 
-async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
-  const cacheKey = lastPostUrl || topicId;
+function gfPostNumberFromUrl(url) {
+  const match = String(url || "").match(/\/(\d+)(?:\?.*)?$/);
+  const postNumber = Number.parseInt(match?.[1] || "0", 10);
 
-  if (!cacheKey) {
+  return Number.isFinite(postNumber) && postNumber > 1 ? postNumber : 0;
+}
+
+async function fetchPostByNumber(topicId, postNumber) {
+  if (!topicId || !postNumber || postNumber <= 1) {
+    return null;
+  }
+
+  const response = await fetch(
+    "/posts/by_number/" + topicId + "/" + postNumber + ".json",
+    { credentials: "same-origin" }
+  );
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
+  return data?.post || data;
+}
+
+function gfUsableReplyPost(post) {
+  return (
+    post &&
+    Number(post.post_number) > 1 &&
+    !post.hidden &&
+    !post.deleted_at &&
+    String(post.cooked || "").trim()
+  );
+}
+
+async function fetchLastReplyExcerpt(topicId, lastPostUrl, replies) {
+  const lastPostNumber = gfPostNumberFromUrl(lastPostUrl);
+  const fallbackPostNumber = Number.parseInt(replies || "0", 10) + 1;
+  const highestPostNumber = Math.max(lastPostNumber, fallbackPostNumber);
+
+  if (!topicId || highestPostNumber <= 1) {
     return "";
   }
+
+  const cacheKey = topicId + ":" + highestPostNumber;
 
   if (desktopExcerptCache.has(cacheKey)) {
     return desktopExcerptCache.get(cacheKey);
   }
 
-  const url = lastPostUrl
-    ? lastPostUrl.replace(/\/$/, "") + ".json"
-    : "/t/" + topicId + ".json";
+  const promise = (async () => {
+    for (let postNumber = highestPostNumber; postNumber >= 2; postNumber--) {
+      try {
+        const post = await fetchPostByNumber(topicId, postNumber);
 
-  const promise = fetch(url, { credentials: "same-origin" })
-    .then((response) => (response.ok ? response.json() : null))
-    .then((data) => {
-      const posts = data?.post_stream?.posts || [];
-      const visiblePosts = posts.filter((post) => !post.hidden);
-      const replyPosts = visiblePosts.filter((post) => Number(post.post_number) > 1);
-      const lastReply = replyPosts[replyPosts.length - 1] || visiblePosts[visiblePosts.length - 1];
-
-      if (!lastReply || Number(lastReply.post_number) <= 1) {
-        return "";
+        if (gfUsableReplyPost(post)) {
+          return plainTextFromCooked(post.cooked).slice(0, 180);
+        }
+      } catch {
+        // Keep searching older reply numbers. A deleted or hidden post can fail here.
       }
+    }
 
-      return plainTextFromCooked(lastReply.cooked).slice(0, 180);
-    })
-    .catch(() => "");
+    return "";
+  })();
 
   desktopExcerptCache.set(cacheKey, promise);
   return promise;
@@ -185,8 +220,10 @@ function patchDesktopReplyExcerpts() {
       const lastPostUrl = row.querySelector(".gf-last-date")?.getAttribute("href");
 
       excerptNode.dataset.gfExcerptLoaded = "true";
-      fetchLastReplyExcerpt(topicId, lastPostUrl).then((excerpt) => {
-        excerptNode.textContent = excerpt || "暂无回复摘要";
+      fetchLastReplyExcerpt(topicId, lastPostUrl, replies).then((excerpt) => {
+        if (excerpt) {
+          excerptNode.textContent = excerpt;
+        }
       });
     });
 }
