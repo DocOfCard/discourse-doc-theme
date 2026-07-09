@@ -269,9 +269,12 @@ img.avatar {
   }
 
   .topic-item-metadata.right > .topic-item-stats .topic-item-stats__category-tags {
+    display: inline-flex;
+    align-items: center;
     flex: 0 1 auto;
+    gap: 3px;
     min-width: 0;
-    margin-right: 2px;
+    margin-right: 0;
     overflow: hidden;
     white-space: nowrap;
   }
@@ -322,6 +325,22 @@ img.avatar {
     height: 0.82em;
     color: currentColor;
     fill: currentColor;
+  }
+
+  .topic-item-metadata.right > .topic-item-stats .gf-native-tag-icon {
+    flex: 0 0 auto;
+    margin: 0;
+    align-self: center;
+    transform: none;
+  }
+
+  .topic-item-metadata.right > .topic-item-stats .discourse-tags {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    line-height: 1.25;
   }
 
   .topic-item-metadata.right > .topic-item-stats .activity,
