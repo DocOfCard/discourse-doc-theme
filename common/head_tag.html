@@ -33,7 +33,7 @@
   display: flex !important;
   align-items: center !important;
   flex-wrap: nowrap !important;
-  gap: 8px !important;
+  gap: 4px !important;
   overflow: hidden !important;
   white-space: nowrap !important;
 }
@@ -149,6 +149,22 @@
   color: currentColor !important;
   fill: currentColor !important;
 }
+
+.mobile-view #main-outlet .topic-list .topic-item-stats__category-tags {
+  margin-right: 0 !important;
+}
+
+.mobile-view #main-outlet .topic-list .topic-item-stats__category-tags .discourse-tags {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.mobile-view #main-outlet .topic-list .gf-native-tag-icon {
+  margin-left: 3px !important;
+  margin-right: -1px !important;
+}
 </style>
 <script>
   (() => {
@@ -231,6 +247,24 @@
       return replyMeta;
     };
 
+    const buildTagMeta = (stats) => {
+      const tags = stats?.querySelector(".topic-item-stats__category-tags .discourse-tags");
+      if (!tags) {
+        return;
+      }
+
+      const existingIcon = tags.previousElementSibling;
+      if (existingIcon?.classList.contains("gf-native-tag-icon")) {
+        return;
+      }
+
+      const tagIcon = document.createElement("span");
+      tagIcon.className = "gf-native-meta-icon gf-native-tag-icon";
+      tagIcon.setAttribute("aria-hidden", "true");
+      tagIcon.innerHTML = `<svg class="fa d-icon d-icon-tag svg-icon svg-string" width="1em" height="1em" aria-hidden="true"><use href="#tag"></use></svg>`;
+      tags.before(tagIcon);
+    };
+
     const patch = () => {
       if (!document.documentElement.classList.contains("mobile-view")) {
         return;
@@ -252,6 +286,7 @@
 
           const time = restoreNativeTime(stats.querySelector(".activity, .gf-mobile-meta-time"));
           const replies = buildReplyMeta(pullRight);
+          buildTagMeta(stats);
 
           if (replies && replies.parentElement !== stats) {
             stats.append(replies);
