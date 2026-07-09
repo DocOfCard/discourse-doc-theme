@@ -130,43 +130,30 @@ const gfViewsHeatClass = helper(function ([topic]) {
 
 const desktopExcerptCache = new Map();
 
-async function fetchLastReplyExcerpt(topicId) {
-  if (!topicId) {
+async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
+  const cacheKey = lastPostUrl || topicId;
+
+  if (!cacheKey) {
     return "";
   }
 
-  if (desktopExcerptCache.has(topicId)) {
-    return desktopExcerptCache.get(topicId);
+  if (desktopExcerptCache.has(cacheKey)) {
+    return desktopExcerptCache.get(cacheKey);
   }
 
-  const promise = fetch("/t/" + topicId + ".json", { credentials: "same-origin" })
+  const url = lastPostUrl
+    ? lastPostUrl.replace(/\/$/, "") + ".json"
+    : "/t/" + topicId + ".json";
+
+  const promise = fetch(url, { credentials: "same-origin" })
     .then((response) => (response.ok ? response.json() : null))
-    .then(async (data) => {
+    .then((data) => {
       const posts = data?.post_stream?.posts || [];
       const visiblePosts = posts.filter((post) => !post.hidden);
       const replyPosts = visiblePosts.filter((post) => Number(post.post_number) > 1);
-      let lastReply = replyPosts[replyPosts.length - 1];
+      const lastReply = replyPosts[replyPosts.length - 1] || visiblePosts[visiblePosts.length - 1];
 
-      if (!lastReply) {
-        const stream = data?.post_stream?.stream || [];
-        const lastPostId = stream[stream.length - 1];
-
-        if (lastPostId) {
-          const postResponse = await fetch("/posts/" + lastPostId + ".json", {
-            credentials: "same-origin",
-          });
-
-          if (postResponse.ok) {
-            const postData = await postResponse.json();
-
-            if (Number(postData?.post_number) > 1 && !postData?.hidden) {
-              lastReply = postData;
-            }
-          }
-        }
-      }
-
-      if (!lastReply) {
+      if (!lastReply || Number(lastReply.post_number) <= 1) {
         return "";
       }
 
@@ -174,7 +161,7 @@ async function fetchLastReplyExcerpt(topicId) {
     })
     .catch(() => "");
 
-  desktopExcerptCache.set(topicId, promise);
+  desktopExcerptCache.set(cacheKey, promise);
   return promise;
 }
 
@@ -195,8 +182,10 @@ function patchDesktopReplyExcerpts() {
         return;
       }
 
+      const lastPostUrl = row.querySelector(".gf-last-date")?.getAttribute("href");
+
       excerptNode.dataset.gfExcerptLoaded = "true";
-      fetchLastReplyExcerpt(topicId).then((excerpt) => {
+      fetchLastReplyExcerpt(topicId, lastPostUrl).then((excerpt) => {
         excerptNode.textContent = excerpt || "暂无回复摘要";
       });
     });
