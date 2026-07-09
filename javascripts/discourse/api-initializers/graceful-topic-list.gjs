@@ -146,7 +146,7 @@ async function fetchLastReplyExcerpt(topicId) {
       const visiblePosts = posts.filter((post) => !post.hidden);
       const lastPost = visiblePosts[visiblePosts.length - 1];
 
-      if (!lastPost || lastPost.post_number === 1) {
+      if (!lastPost) {
         return "";
       }
 
