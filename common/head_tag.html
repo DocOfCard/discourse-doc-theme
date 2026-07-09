@@ -150,21 +150,15 @@
   fill: currentColor !important;
 }
 
-.mobile-view #main-outlet .topic-list .topic-item-stats__category-tags {
-  margin-right: 0 !important;
+.mobile-view #main-outlet .topic-list .gf-native-tag-icon{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:0.88em!important;height:0.88em!important;margin:0 2px 0 0!important;
+ color:var(--primary-low-mid)!important;opacity:.75!important;line-height:1!important;
+}
+.mobile-view #main-outlet .topic-list .gf-native-tag-icon svg{
+ width:0.88em!important;height:0.88em!important;
 }
 
-.mobile-view #main-outlet .topic-list .topic-item-stats__category-tags .discourse-tags {
-  display: inline-flex !important;
-  align-items: center !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.mobile-view #main-outlet .topic-list .gf-native-tag-icon {
-  margin-left: 3px !important;
-  margin-right: -1px !important;
-}
 </style>
 <script>
   (() => {
@@ -247,22 +241,14 @@
       return replyMeta;
     };
 
+    
     const buildTagMeta = (stats) => {
       const tags = stats?.querySelector(".topic-item-stats__category-tags .discourse-tags");
-      if (!tags) {
-        return;
-      }
-
-      const existingIcon = tags.previousElementSibling;
-      if (existingIcon?.classList.contains("gf-native-tag-icon")) {
-        return;
-      }
-
-      const tagIcon = document.createElement("span");
-      tagIcon.className = "gf-native-meta-icon gf-native-tag-icon";
-      tagIcon.setAttribute("aria-hidden", "true");
-      tagIcon.innerHTML = `<svg class="fa d-icon d-icon-tag svg-icon svg-string" width="1em" height="1em" aria-hidden="true"><use href="#tag"></use></svg>`;
-      tags.before(tagIcon);
+      if (!tags || tags.previousElementSibling?.classList.contains("gf-native-tag-icon")) return;
+      const icon=document.createElement("span");
+      icon.className="gf-native-meta-icon gf-native-tag-icon";
+      icon.innerHTML=`<svg class="svg-icon" width="1em" height="1em" viewBox="0 0 512 512" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" d="M345.6 64H224L64 224l224 224 160-160V166.4L345.6 64z"/><circle cx="320" cy="128" r="20" fill="currentColor"/></svg>`;
+      tags.before(icon);
     };
 
     const patch = () => {
