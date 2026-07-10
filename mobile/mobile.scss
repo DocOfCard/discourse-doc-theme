@@ -550,3 +550,15 @@ div.cooked {
 .chat-scroll-to-bottom__arrow {
   width: 33px;
 }
+
+
+
+@media (max-width: 767px) {
+  .container.list-container.--categories {
+    margin-top: 10px;
+  }
+
+  .container.list-container.--categories .list-controls {
+    margin-top: 3px;
+  }
+}
