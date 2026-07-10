@@ -165,6 +165,16 @@ function gfUsableReplyPost(post) {
   );
 }
 
+function gfReplyUrl(lastPostUrl, postNumber) {
+  const url = String(lastPostUrl || "");
+
+  if (!url || !postNumber) {
+    return "";
+  }
+
+  return url.replace(/\/\d+(?:\?.*)?$/, "/" + postNumber);
+}
+
 async function fetchLastReplyExcerpt(topicId, lastPostUrl, replies) {
   const lastPostNumber = gfPostNumberFromUrl(lastPostUrl);
   const fallbackPostNumber = Number.parseInt(replies || "0", 10) + 1;
@@ -186,7 +196,10 @@ async function fetchLastReplyExcerpt(topicId, lastPostUrl, replies) {
         const post = await fetchPostByNumber(topicId, postNumber);
 
         if (gfUsableReplyPost(post)) {
-          return plainTextFromCooked(post.cooked).slice(0, 180);
+          return {
+            excerpt: plainTextFromCooked(post.cooked).slice(0, 180),
+            postNumber: Number(post.post_number),
+          };
         }
       } catch {
         // Keep searching older reply numbers. A deleted or hidden post can fail here.
@@ -220,10 +233,24 @@ function patchDesktopReplyExcerpts() {
       const lastPostUrl = row.querySelector(".gf-last-date")?.getAttribute("href");
 
       excerptNode.dataset.gfExcerptLoaded = "true";
-      fetchLastReplyExcerpt(topicId, lastPostUrl, replies).then((excerpt) => {
-        if (excerpt) {
-          excerptNode.textContent = excerpt;
+      fetchLastReplyExcerpt(topicId, lastPostUrl, replies).then((result) => {
+        if (!result?.excerpt) {
+          return;
         }
+
+        const replyUrl = gfReplyUrl(lastPostUrl, result.postNumber);
+
+        if (!replyUrl) {
+          excerptNode.textContent = result.excerpt;
+          return;
+        }
+
+        const link = document.createElement("a");
+        link.className = "gf-last-reply-link";
+        link.href = replyUrl;
+        link.textContent = result.excerpt;
+
+        excerptNode.replaceChildren(link);
       });
     });
 }

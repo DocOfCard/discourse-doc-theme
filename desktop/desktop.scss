@@ -637,6 +637,17 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
+
+  .gf-last-reply-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .gf-last-reply-link:hover {
+    color: var(--tertiary);
+    text-decoration: none;
+  }
+
 }
 
 
