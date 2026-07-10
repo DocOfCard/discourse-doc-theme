@@ -65,8 +65,8 @@ img.avatar {
   margin-bottom: 15px;
 }
 
-.list-controls {
-  margin: auto auto 0.3rem;
+#main-outlet .list-controls {
+  margin-top: 3px;
 
   .nav-pills > li {
     background: transparent;
@@ -552,13 +552,6 @@ div.cooked {
 }
 
 
-
-@media (max-width: 767px) {
-  .container.list-container.--categories {
-    margin-top: 10px;
-  }
-
-  .container.list-container.--categories .list-controls {
-    margin-top: 3px;
-  }
+.container.list-container.--categories {
+  margin-top: 10px;
 }
