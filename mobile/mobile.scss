@@ -224,7 +224,7 @@ img.avatar {
     width: auto;
     min-width: 0;
     max-width: none;
-    margin-left: calc(var(--gf-topic-avatar-size, 44px) + var(--gf-topic-avatar-gap, 10px));
+    margin-left: calc(var(--gf-topic-avatar-size, 44px) + 5px);
     min-height: var(--gf-topic-avatar-size, 44px);
     padding-right: 28px;
   }
