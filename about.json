@@ -1,6 +1,6 @@
 {
-  "name": "Graceful Theme Doc Mod v11.0.43",
-  "version": "11.0.43",
+  "name": "Graceful Theme Doc Mod v11.0.44",
+  "version": "11.0.44",
   "about_url": "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040",
   "license_url": "https://github.com/discourse/graceful/blob/main/LICENSE",
   "assets": {
@@ -39,5 +39,5 @@
     "screenshots/light.png",
     "screenshots/dark.png"
   ],
-  "theme_version": "11.0.43"
+  "theme_version": "11.0.44"
 }
