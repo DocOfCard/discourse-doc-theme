@@ -17,7 +17,7 @@ const GracefulOriginalPoster = <template>
 
 export default apiInitializer("1.0.0", (api) => {
   api.renderInOutlet(
-    "latest-topic-list-item-topic-poster",
+    "topic-list-item-mobile-avatar",
     GracefulOriginalPoster
   );
 
