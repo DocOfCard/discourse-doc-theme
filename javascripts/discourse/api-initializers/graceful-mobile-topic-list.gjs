@@ -1,6 +1,26 @@
 import { apiInitializer } from "discourse/lib/api";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import DUserLink from "discourse/ui-kit/d-user-link";
+
+const GracefulOriginalPoster = <template>
+  {{#if @outletArgs.topic.creator}}
+    <div class="topic-poster">
+      <DUserLink
+        @username={{@outletArgs.topic.creator.username}}
+        data-user-card={{@outletArgs.topic.creator.username}}
+      >
+        {{dAvatar @outletArgs.topic.creator imageSize="large"}}
+      </DUserLink>
+    </div>
+  {{/if}}
+</template>;
 
 export default apiInitializer("1.0.0", (api) => {
+  api.renderInOutlet(
+    "latest-topic-list-item-topic-poster",
+    GracefulOriginalPoster
+  );
+
   const key = "__gfNativeMobileTopicMetaExperiment";
   const previous = window[key];
 
