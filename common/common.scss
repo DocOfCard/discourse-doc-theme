@@ -1,5 +1,7 @@
-/* Graceful Theme Doc Mod v11.0.32 */
+/* Graceful Theme Doc Mod v11.0.37 */
 @use "sass:color";
+
+@import url("https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap");
 
 // Big thanks to jsthon for the initial work on this https://meta.discourse.org/u/jsthon/
 
@@ -355,3 +357,100 @@ header.d-header {
     line-height: 1.22;
   }
 }
+
+/* Styles migrated from common/head_tag.html and common/header.html. */
+/* Graceful Theme Doc Mod v11.0.35 migrated supplemental styles */
+.topic-list .link-bottom-line.topic-item-stats::before,
+.topic-list .gf-topic-meta::before,
+.topic-list .topic-item-metadata.right > .topic-item-stats::before {
+  display: none !important;
+  content: none !important;
+}
+
+.topic-list .gf-topic-meta .badge-category__wrapper,
+.topic-list .gf-topic-meta .badge-category,
+.topic-list .gf-topic-meta .badge-category__name,
+.topic-list .topic-item-metadata.right > .topic-item-stats .badge-category__wrapper,
+.topic-list .topic-item-metadata.right > .topic-item-stats .badge-category,
+.topic-list .topic-item-metadata.right > .topic-item-stats .badge-category__name {
+  color: var(--category-badge-color) !important;
+}
+
+#main-outlet .list-controls .combo-box .combo-box-header,
+  #main-outlet .list-controls .select-kit.combo-box.category-drop .category-drop-header,
+  #main-outlet .list-controls .select-kit.combo-box.tag-drop .tag-drop-header,
+  #main-outlet .list-controls .mobile-nav,
+  #main-outlet .list-controls .select-kit-header,
+  #main-outlet .list-controls .navigation-controls .btn,
+  #main-outlet .list-controls .navigation-controls button,
+  #main-outlet .list-controls #create-topic,
+  #main-outlet .list-controls .nav-pills > li > a,
+  #main-outlet .list-controls .nav-pills > li button {
+    font-weight: 400 !important;
+  }
+
+#main-outlet .list-controls .category-drop-header,
+  #main-outlet .list-controls .tag-drop-header,
+  #main-outlet .list-controls .category-drop-header .selected-name,
+  #main-outlet .list-controls .tag-drop-header .selected-name,
+  #main-outlet .list-controls .category-drop-header .d-icon,
+  #main-outlet .list-controls .tag-drop-header .d-icon {
+    color: var(--primary) !important;
+  }
+
+#main-outlet .list-controls .nav-pills > li.active > a,
+  #main-outlet .list-controls .nav-pills > li > a.active {
+    border-bottom-width: 1px !important;
+  }
+
+#main-outlet .topic-list .gf-topic-left .title,
+  #main-outlet .topic-list .topic-item-metadata.right > .main-link .title,
+  #main-outlet .topic-list .topic-item-metadata.right > .topic-list-main-link .title,
+  #main-outlet .topic-list .topic-item-metadata.right > .topic-list-main-link a.title {
+    color: rgb(var(--primary-rgb), 0.86) !important;
+    font-weight: 550 !important;
+    letter-spacing: -0.008em !important;
+  }
+
+#main-outlet .topic-list tr.topic-list-item.visited .gf-topic-left .title,
+  #main-outlet .topic-list tr.topic-list-item.visited .topic-item-metadata.right > .main-link .title,
+  #main-outlet .topic-list tr.topic-list-item.visited .topic-item-metadata.right > .topic-list-main-link .title,
+  #main-outlet .topic-list tr.topic-list-item.visited .topic-item-metadata.right > .topic-list-main-link a.title {
+    color: rgb(var(--primary-rgb), 0.66) !important;
+    font-weight: 500 !important;
+  }
+
+#main-outlet .topic-list .gf-topic-meta,
+  #main-outlet .topic-list .topic-item-metadata.right > .topic-item-stats {
+    color: var(--primary-medium) !important;
+  }
+
+#main-outlet .topic-list .gf-meta-author,
+  #main-outlet .topic-list .gf-mobile-meta-user {
+    color: var(--primary-medium) !important;
+    font-weight: 500 !important;
+  }
+
+#main-outlet .topic-list .gf-created-at,
+  #main-outlet .topic-list .gf-mobile-meta-time,
+  #main-outlet .topic-list .gf-mobile-time-text,
+  #main-outlet .topic-list .gf-meta-created-item,
+  #main-outlet .topic-list .gf-meta-icon,
+  #main-outlet .topic-list .gf-mobile-time-icon,
+  #main-outlet .topic-list .gf-mobile-action-icon {
+    color: var(--primary-low-mid) !important;
+    font-weight: 400 !important;
+  }
+
+#main-outlet .topic-list .gf-meta-icon .d-icon,
+  #main-outlet .topic-list .gf-meta-icon svg,
+  #main-outlet .topic-list .gf-mobile-time-icon .d-icon,
+  #main-outlet .topic-list .gf-mobile-time-icon svg,
+  #main-outlet .topic-list .gf-mobile-action-icon .d-icon,
+  #main-outlet .topic-list .gf-mobile-action-icon svg {
+    width: 0.82em !important;
+    height: 0.82em !important;
+    font-size: 0.82em !important;
+    opacity: 0.75 !important;
+    vertical-align: -0.08em !important;
+  }
