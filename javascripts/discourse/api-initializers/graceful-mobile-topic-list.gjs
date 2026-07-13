@@ -1,6 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
 
-export default apiInitializer("1.0.0", () => {
+export default apiInitializer("1.0.0", (api) => {
   const key = "__gfNativeMobileTopicMetaExperiment";
   const previous = window[key];
 
