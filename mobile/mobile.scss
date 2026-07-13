@@ -551,3 +551,45 @@ div.cooked {
 .container.list-container.--categories {
   margin-top: 10px;
 }
+
+// New mobile topic-list markup: keep each topic row full-width and prevent the
+// desktop header columns from shrinking the title column on /latest.
+.topic-list:has(.topic-item-metadata.right) {
+  .topic-list-header {
+    display: none;
+  }
+
+  tbody.topic-list-body,
+  tbody.topic-list-body > tr.topic-list-item,
+  tbody.topic-list-body > tr.topic-list-item > td.topic-list-data {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  tbody.topic-list-body > tr.topic-list-item > td.topic-list-data {
+    overflow: hidden;
+  }
+
+  tbody.topic-list-body > tr.topic-list-item > td.topic-list-data > .pull-left {
+    float: left;
+    width: var(--gf-topic-avatar-size, 44px);
+    margin-right: var(--gf-topic-avatar-gap, 10px);
+  }
+
+  .topic-item-metadata.right {
+    display: block;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    margin-left: calc(var(--gf-topic-avatar-size, 44px) + var(--gf-topic-avatar-gap, 10px));
+  }
+
+  .topic-item-metadata.right > .main-link,
+  .topic-item-metadata.right > .topic-list-main-link,
+  .topic-item-metadata.right > .main-link .title,
+  .topic-item-metadata.right > .topic-list-main-link .title {
+    min-width: 0;
+    max-width: 100%;
+  }
+}

@@ -89,6 +89,19 @@ const gfShortRelativeDate = helper(function ([date]) {
   return gfShortRelativeTime(date);
 });
 
+const gfOriginalPoster = helper(function ([topic]) {
+  const posters = topic?.posters || topic?.get?.("posters") || [];
+  const firstPoster = posters?.[0];
+  const firstPosterUser =
+    firstPoster?.user ||
+    firstPoster?.get?.("user") ||
+    firstPoster?.poster ||
+    firstPoster?.get?.("poster") ||
+    (firstPoster?.username ? firstPoster : null);
+
+  return firstPosterUser || topic?.creator || topic?.get?.("creator") || null;
+});
+
 const gfPostsHeatClass = helper(function ([topic]) {
   const count = Number.parseInt(
     topic?.replyCount || topic?.get?.("replyCount") || 0,
@@ -267,15 +280,13 @@ const GracefulTopicCell = <template>
     <div class="gf-topic-row">
       <div class="gf-topic-left">
         <div class="pull-left gf-op-avatar">
-          {{#if @topic.creator}}
-            <DUserLink @username={{@topic.creator.username}} aria-hidden="true" tabindex="-1">
-              {{dAvatar @topic.creator imageSize="large"}}
-            </DUserLink>
-          {{else if @topic.lastPosterUser}}
-            <DUserLink @username={{@topic.lastPosterUser.username}} aria-hidden="true" tabindex="-1">
-              {{dAvatar @topic.lastPosterUser imageSize="large"}}
-            </DUserLink>
-          {{/if}}
+          {{#let (gfOriginalPoster @topic) as |originalPoster|}}
+            {{#if originalPoster}}
+              <DUserLink @username={{originalPoster.username}} aria-hidden="true" tabindex="-1">
+                {{dAvatar originalPoster imageSize="large"}}
+              </DUserLink>
+            {{/if}}
+          {{/let}}
         </div>
 
         <div class="topic-item-metadata right gf-topic-copy">
@@ -301,18 +312,20 @@ const GracefulTopicCell = <template>
               {{/if}}
             {{/unless}}
 
-            {{#if @topic.creator}}
-              <span
-                class="gf-meta-item gf-meta-author-item"
-                title={{concat "发贴人：" @topic.creator.username}}
-                aria-label={{concat "发贴人：" @topic.creator.username}}
-              >
-                <span class="gf-meta-icon" aria-hidden="true">{{dIcon "user"}}</span>
-                <DUserLink class="gf-meta-author" @username={{@topic.creator.username}}>
-                  {{@topic.creator.username}}
-                </DUserLink>
-              </span>
-            {{/if}}
+            {{#let (gfOriginalPoster @topic) as |originalPoster|}}
+              {{#if originalPoster}}
+                <span
+                  class="gf-meta-item gf-meta-author-item"
+                  title={{concat "发贴人：" originalPoster.username}}
+                  aria-label={{concat "发贴人：" originalPoster.username}}
+                >
+                  <span class="gf-meta-icon" aria-hidden="true">{{dIcon "user"}}</span>
+                  <DUserLink class="gf-meta-author" @username={{originalPoster.username}}>
+                    {{originalPoster.username}}
+                  </DUserLink>
+                </span>
+              {{/if}}
+            {{/let}}
 
             {{#if @topic.tags.length}}
               <span class="gf-meta-item gf-meta-tags-item" title="标签" aria-label="标签">
