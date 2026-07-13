@@ -1,6 +1,27 @@
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer("1.0.0", (api) => {
+  // Keep the native mobile Topic List, but make its avatar source the topic
+  // creator. Core mobile layout reads lastPosterUser for the left avatar.
+  api.registerValueTransformer(
+    "topic-list-item-class",
+    ({ value, context }) => {
+      const topic = context?.topic;
+      const isMobile =
+        document.documentElement.classList.contains("mobile-view") ||
+        document.body?.classList.contains("mobile-view");
+
+      if (isMobile && topic?.creator && topic.lastPosterUser !== topic.creator) {
+        if (typeof topic.set === "function") {
+          topic.set("lastPosterUser", topic.creator);
+        } else {
+          topic.lastPosterUser = topic.creator;
+        }
+      }
+
+      return value;
+    }
+  );
   const key = "__gfNativeMobileTopicMetaExperiment";
   const previous = window[key];
 

@@ -38,5 +38,6 @@
   "screenshots": [
     "screenshots/light.png",
     "screenshots/dark.png"
-  ]
+  ],
+  "theme_version": "11.0.39"
 }

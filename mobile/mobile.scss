@@ -555,8 +555,12 @@ div.cooked {
 // New mobile topic-list markup: keep each topic row full-width and prevent the
 // desktop header columns from shrinking the title column on /latest.
 .topic-list:has(.topic-item-metadata.right) {
-  .topic-list-header {
+  &:not(.bulk-select-enabled) .topic-list-header {
     display: none;
+  }
+
+  &.bulk-select-enabled .topic-list-header {
+    display: table-header-group;
   }
 
   tbody.topic-list-body,
