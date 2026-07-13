@@ -1,22 +1,44 @@
 import { apiInitializer } from "discourse/lib/api";
 
+function useCreatorAsMobilePoster(topic) {
+  if (!topic?.creator || topic.lastPosterUser === topic.creator) {
+    return;
+  }
+
+  if (typeof topic.set === "function") {
+    topic.set("lastPosterUser", topic.creator);
+  } else {
+    topic.lastPosterUser = topic.creator;
+  }
+}
+
 export default apiInitializer("1.0.0", (api) => {
-  // Keep the native mobile Topic List, but make its avatar source the topic
-  // creator. Core mobile layout reads lastPosterUser for the left avatar.
+  // Core's native compact mobile row renders lastPosterUser. Replace that
+  // value while the mobile layout is being resolved so responsive desktop ->
+  // mobile switches are correct without requiring a full page refresh.
+  api.registerValueTransformer(
+    "topic-list-item-mobile-layout",
+    ({ value, context }) => {
+      if (value) {
+        useCreatorAsMobilePoster(context?.topic);
+      }
+
+      return value;
+    }
+  );
+
+  // Retain this as a fallback for routes which resolve item classes after the
+  // responsive layout decision.
   api.registerValueTransformer(
     "topic-list-item-class",
     ({ value, context }) => {
-      const topic = context?.topic;
       const isMobile =
         document.documentElement.classList.contains("mobile-view") ||
-        document.body?.classList.contains("mobile-view");
+        document.body?.classList.contains("mobile-view") ||
+        window.matchMedia?.("(max-width: 767px)")?.matches === true;
 
-      if (isMobile && topic?.creator && topic.lastPosterUser !== topic.creator) {
-        if (typeof topic.set === "function") {
-          topic.set("lastPosterUser", topic.creator);
-        } else {
-          topic.lastPosterUser = topic.creator;
-        }
+      if (isMobile) {
+        useCreatorAsMobilePoster(context?.topic);
       }
 
       return value;

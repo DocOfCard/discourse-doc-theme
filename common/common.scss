@@ -150,12 +150,14 @@ pre {
   }
 }
 
-#create-topic .d-icon {
-  color: var(--primary) !important;
-}
+.topic-create-button__combo > .btn {
+  .d-icon {
+    color: var(--primary) !important;
+  }
 
-#create-topic:hover .d-icon {
-  color: var(--tertiary) !important;
+  &:hover .d-icon {
+    color: var(--tertiary) !important;
+  }
 }
 
 #reply-control {
