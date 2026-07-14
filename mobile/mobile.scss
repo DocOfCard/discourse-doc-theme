@@ -417,3 +417,78 @@ div.cooked {
     );
   }
 }
+
+// Mobile bulk selection uses an explicit three-column grid so the checkbox,
+// topic content, and compact statistics keep independent widths.
+.topic-list.bulk-select-enabled {
+  > .topic-list-header > tr,
+  > tbody.topic-list-body > tr.topic-list-item {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) 34px;
+    width: 100%;
+  }
+
+  > .topic-list-header > tr > th.bulk-select,
+  > tbody.topic-list-body > tr.topic-list-item > td.bulk-select {
+    grid-column: 1;
+    box-sizing: border-box;
+    width: 32px;
+    min-width: 32px;
+    max-width: 32px;
+    padding-inline: 4px !important;
+    align-self: stretch;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  > .topic-list-header > tr > th.default,
+  > tbody.topic-list-body > tr.topic-list-item > td.gf-topic-cell {
+    grid-column: 2;
+    box-sizing: border-box;
+    width: auto !important;
+    min-width: 0;
+    max-width: none;
+  }
+
+  > .topic-list-header > tr > th.gf-last-post-header,
+  > tbody.topic-list-body > tr.topic-list-item > td.gf-last-post-cell {
+    grid-column: 3;
+    box-sizing: border-box;
+    width: 34px;
+    min-width: 34px;
+    max-width: 34px;
+  }
+
+  > tbody.topic-list-body > tr.topic-list-item > td.bulk-select input.bulk-select {
+    margin: 0;
+  }
+
+  .bulk-select-topics {
+    display: flex !important;
+    flex-flow: row wrap !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100% !important;
+    min-width: 0;
+  }
+
+  .bulk-select-topics-actions {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bulk-select-topics-dropdown {
+    display: flex !important;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .bulk-select-topics .btn {
+    margin: 0 !important;
+    white-space: nowrap;
+  }
+}
