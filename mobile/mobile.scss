@@ -416,4 +416,65 @@ div.cooked {
       var(--tertiary)
     );
   }
+
+  // Keep the native bulk-select column compact when the custom topic columns
+  // are active. The normal topic cell must stop claiming 100% once Discourse
+  // inserts the checkbox column.
+  &.bulk-select-enabled {
+    table-layout: fixed;
+
+    .topic-list-header > tr > th.bulk-select,
+    > tbody.topic-list-body > tr.topic-list-item > td.bulk-select {
+      box-sizing: border-box;
+      width: 34px;
+      min-width: 34px;
+      max-width: 34px;
+      padding: 0 4px !important;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .topic-list-header > tr > th.default {
+      width: auto;
+      min-width: 0;
+      padding: 10px 4px !important;
+    }
+
+    > tbody.topic-list-body > tr.topic-list-item > td.gf-topic-cell {
+      width: auto;
+      min-width: 0;
+    }
+
+    .bulk-select-topics {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .bulk-select-topics-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bulk-select-topics-dropdown {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .bulk-select-topics .btn {
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    > tbody.topic-list-body > tr.topic-list-item > td.bulk-select input.bulk-select {
+      margin: 0;
+    }
+  }
+
 }
