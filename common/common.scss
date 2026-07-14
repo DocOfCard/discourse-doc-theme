@@ -456,3 +456,18 @@ body.has-full-page-chat {
 .powered-by-discourse {
   margin-top: 1em;
 }
+
+/* Topic list metadata icons: shared desktop/mobile presentation. */
+#main-outlet .topic-list .gf-meta-icon {
+  color: var(--primary-low-mid) !important;
+  font-weight: 400 !important;
+}
+
+#main-outlet .topic-list .gf-meta-icon .d-icon,
+#main-outlet .topic-list .gf-meta-icon svg {
+  width: 0.82em !important;
+  height: 0.82em !important;
+  font-size: 0.82em !important;
+  opacity: 0.75 !important;
+  vertical-align: -0.08em !important;
+}
