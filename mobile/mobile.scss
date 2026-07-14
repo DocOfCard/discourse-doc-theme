@@ -295,6 +295,22 @@ div.cooked {
     line-height: 1.22;
   }
 
+  // Discourse core limits mobile `td .main-link` to 78% below 40rem.
+  // This custom cell already reserves a separate statistics column, so let the
+  // inner title area use the full width left inside the topic cell.
+  .gf-topic-cell .main-link {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .gf-topic-cell .topic-item-metadata.right,
+  .gf-topic-cell .gf-topic-copy {
+    width: auto;
+    max-width: none;
+  }
+
+
   .gf-topic-title .title {
     font-size: 16px;
     line-height: 1.22;
