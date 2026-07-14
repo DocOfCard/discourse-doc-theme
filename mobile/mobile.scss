@@ -356,9 +356,9 @@ div.cooked {
     position: relative;
     display: table-cell !important;
     box-sizing: border-box;
-    width: 46px;
-    min-width: 46px;
-    max-width: 46px;
+    width: 34px;
+    min-width: 34px;
+    max-width: 34px;
     padding: 14px 0 !important;
     white-space: nowrap;
     vertical-align: middle;
@@ -368,16 +368,16 @@ div.cooked {
     display: grid;
     grid-template-columns: 1fr;
     gap: 4px;
-    width: 38px;
-    min-width: 38px;
+    width: 28px;
+    min-width: 28px;
     margin: 0;
     padding: 0;
   }
 
   .gf-stat-box {
-    min-width: 38px;
+    min-width: 28px;
     min-height: 0;
-    padding: 2px 1px;
+    padding: 1px 0;
     border-radius: 4px;
     background: rgb(var(--primary-rgb), 0.035);
     text-align: center;
@@ -391,13 +391,14 @@ div.cooked {
   }
 
   .gf-stat-label {
-    display: block;
+    
     margin-top: 1px;
     color: var(--primary-medium);
     font-size: 8px;
     line-height: 1.1;
     letter-spacing: 0.04em;
-  }
+    display: none;
+}
 
   .gf-last-post-summary {
     display: block;
