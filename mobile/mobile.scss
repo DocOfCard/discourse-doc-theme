@@ -242,9 +242,9 @@ div.cooked {
     }
 
     .gf-last-post-header {
-      width: 76px;
-      min-width: 76px;
-      max-width: 76px;
+      width: 58px;
+      min-width: 58px;
+      max-width: 58px;
       padding-inline: 0;
       font-size: 0;
     }
@@ -253,7 +253,7 @@ div.cooked {
   > tbody.topic-list-body > tr.topic-list-item > td.gf-topic-cell {
     box-sizing: border-box;
     width: auto;
-    padding: 14px 8px 14px 0 !important;
+    padding: 14px 4px 14px 0 !important;
     vertical-align: middle;
   }
 
@@ -339,9 +339,9 @@ div.cooked {
     position: relative;
     display: table-cell !important;
     box-sizing: border-box;
-    width: 76px;
-    min-width: 76px;
-    max-width: 76px;
+    width: 58px;
+    min-width: 58px;
+    max-width: 58px;
     padding: 14px 0 !important;
     vertical-align: middle;
   }
@@ -350,14 +350,14 @@ div.cooked {
     display: grid;
     grid-template-columns: 1fr;
     gap: 4px;
-    width: 58px;
+    width: 46px;
     margin-left: auto;
-    padding-right: 10px;
+    padding-right: 4px;
   }
 
   .gf-stat-box {
     min-height: 0;
-    padding: 3px 4px;
+    padding: 3px 2px;
     border-radius: 4px;
     background: rgb(var(--primary-rgb), 0.035);
     text-align: center;
