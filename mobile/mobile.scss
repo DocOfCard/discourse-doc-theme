@@ -234,7 +234,7 @@ div.cooked {
 
 // Graceful custom topic list: same component as desktop, without the reply summary.
 .topic-list {
-  table-layout: fixed;
+  table-layout: auto;
 
   .topic-list-header {
     th.default {
@@ -242,9 +242,10 @@ div.cooked {
     }
 
     .gf-last-post-header {
-      width: 58px;
-      min-width: 58px;
-      max-width: 58px;
+      width: 1%;
+      min-width: 0;
+      max-width: none;
+      white-space: nowrap;
       padding-inline: 0;
       font-size: 0;
     }
@@ -252,7 +253,7 @@ div.cooked {
 
   > tbody.topic-list-body > tr.topic-list-item > td.gf-topic-cell {
     box-sizing: border-box;
-    width: auto;
+    width: 100%;
     padding: 14px 4px 14px 0 !important;
     vertical-align: middle;
   }
@@ -339,10 +340,11 @@ div.cooked {
     position: relative;
     display: table-cell !important;
     box-sizing: border-box;
-    width: 58px;
-    min-width: 58px;
-    max-width: 58px;
+    width: 1%;
+    min-width: 0;
+    max-width: none;
     padding: 14px 0 !important;
+    white-space: nowrap;
     vertical-align: middle;
   }
 
@@ -351,7 +353,7 @@ div.cooked {
     grid-template-columns: 1fr;
     gap: 4px;
     width: 46px;
-    margin-left: auto;
+    margin: 0;
     padding-right: 4px;
   }
 
