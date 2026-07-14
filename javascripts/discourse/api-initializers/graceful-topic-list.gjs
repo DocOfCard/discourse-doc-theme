@@ -284,7 +284,7 @@ const GracefulTopicCell = <template>
             <TopicLink @topic={{@topic}} class="title raw-link raw-topic-link" />
           </div>
 
-          <div class="gf-topic-meta topic-item-stats clearfix" aria-label="topic metadata">
+          <div class="gf-topic-meta topic-item-stats" aria-label="topic metadata">
             {{#unless @hideCategory}}
               {{#if @topic.category}}
                 {{#unless @topic.isPinnedUncategorized}}
