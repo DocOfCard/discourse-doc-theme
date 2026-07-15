@@ -29,6 +29,35 @@ const gfCategoryColorStyle = helper(function ([category]) {
   return htmlSafe("--gf-category-native-color: #" + color + "; --gf-marker-color: #" + color + ";");
 });
 
+
+function gfReadTopicAccessLevel(topic) {
+  const raw =
+    topic?.minimumTrustLevel ??
+    topic?.minimum_trust_level ??
+    topic?.get?.("minimumTrustLevel") ??
+    topic?.get?.("minimum_trust_level") ??
+    0;
+
+  const level = Number.parseInt(raw, 10);
+  return Number.isFinite(level) && level >= 1 && level <= 4 ? level : 0;
+}
+
+const gfTopicAccessLevel = helper(function ([topic]) {
+  return gfReadTopicAccessLevel(topic);
+});
+
+const gfTopicAccessLabel = helper(function ([topic]) {
+  const level = gfReadTopicAccessLevel(topic);
+  return level === 4 ? "TL4" : level >= 1 && level <= 3 ? `TL${level}+` : "";
+});
+
+const gfTopicAccessTitle = helper(function ([topic]) {
+  const level = gfReadTopicAccessLevel(topic);
+  return level
+    ? `阅读门槛：仅限信任等级 ${level} 及以上用户查看`
+    : "";
+});
+
 const gfLongDate = helper(function ([date]) {
   if (!date) {
     return "";
@@ -282,6 +311,16 @@ const GracefulTopicCell = <template>
           <div class="main-link gf-topic-title">
             <span class="topic-statuses"><TopicStatus @topic={{@topic}} @context="topic-list" /></span>
             <TopicLink @topic={{@topic}} class="title raw-link raw-topic-link" />
+            {{#if (gfTopicAccessLevel @topic)}}
+              <span
+                class={{concat "gf-topic-access-badge gf-topic-access-level-" (gfTopicAccessLevel @topic)}}
+                title={{gfTopicAccessTitle @topic}}
+                aria-label={{gfTopicAccessTitle @topic}}
+              >
+                <span class="gf-topic-access-icon" aria-hidden="true">{{dIcon "lock"}}</span>
+                <span class="gf-topic-access-level">{{gfTopicAccessLabel @topic}}</span>
+              </span>
+            {{/if}}
           </div>
 
           <div class="gf-topic-meta topic-item-stats" aria-label="topic metadata">

@@ -471,3 +471,60 @@ body.has-full-page-chat {
   opacity: 0.75 !important;
   vertical-align: -0.08em !important;
 }
+
+
+/* Topic access badge for the custom Graceful topic-list column. */
+#main-outlet .topic-list .gf-topic-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 0.38em;
+  row-gap: 0.2em;
+}
+
+#main-outlet .topic-list .gf-topic-access-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  flex: 0 0 auto;
+  padding: 0.14em 0.44em;
+  border: 1px solid color-mix(in srgb, var(--tertiary) 34%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tertiary) 10%, var(--secondary));
+  color: var(--primary-high);
+  font-size: var(--font-down-2);
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  vertical-align: 0.08em;
+}
+
+#main-outlet .topic-list .gf-topic-access-icon {
+  display: inline-flex;
+  color: var(--tertiary);
+}
+
+#main-outlet .topic-list .gf-topic-access-icon .d-icon,
+#main-outlet .topic-list .gf-topic-access-icon svg {
+  width: 0.78em;
+  height: 0.78em;
+}
+
+#main-outlet .topic-list .gf-topic-access-level-3,
+#main-outlet .topic-list .gf-topic-access-level-4 {
+  border-color: color-mix(in srgb, var(--danger) 32%, transparent);
+  background: color-mix(in srgb, var(--danger) 8%, var(--secondary));
+}
+
+#main-outlet .topic-list .gf-topic-access-level-3 .gf-topic-access-icon,
+#main-outlet .topic-list .gf-topic-access-level-4 .gf-topic-access-icon {
+  color: var(--danger);
+}
+
+@media screen and (max-width: 767px) {
+  #main-outlet .topic-list .gf-topic-access-badge {
+    padding-inline: 0.42em;
+  }
+
+}
