@@ -1,10 +1,10 @@
 {
-  "name": "Graceful Theme mod test",
+  "name": "Graceful Theme DOC mod",
   "component": false,
   "license_url": "https://github.com/discourse/graceful/blob/main/LICENSE",
   "about_url": "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040",
   "authors": null,
-  "theme_version": "1.0.4-topic-list",
+  "theme_version": "11.0.49",
   "minimum_discourse_version": null,
   "maximum_discourse_version": null,
   "assets": {
