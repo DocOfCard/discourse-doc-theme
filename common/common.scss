@@ -475,56 +475,54 @@ body.has-full-page-chat {
 
 /* Topic access badge for the custom Graceful topic-list column. */
 #main-outlet .topic-list .gf-topic-title {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  column-gap: 0.38em;
-  row-gap: 0.2em;
+  display: block;
 }
 
 #main-outlet .topic-list .gf-topic-access-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.2em;
-  flex: 0 0 auto;
-  padding: 0.14em 0.44em;
-  border: 1px solid color-mix(in srgb, var(--tertiary) 34%, transparent);
+  gap: 0.16em;
+  margin-inline-start: 0.3em;
+  padding: 0.04em 0.34em;
+  border: 1px solid color-mix(in srgb, var(--tertiary) 28%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--tertiary) 10%, var(--secondary));
-  color: var(--primary-high);
-  font-size: var(--font-down-2);
+  background: color-mix(in srgb, var(--tertiary) 7%, var(--secondary));
+  color: color-mix(in srgb, var(--primary) 78%, var(--tertiary));
+  font-size: 0.68em;
   font-weight: 650;
-  line-height: 1.25;
-  letter-spacing: 0.01em;
+  line-height: 1.35;
+  letter-spacing: 0;
   white-space: nowrap;
-  vertical-align: 0.08em;
+  vertical-align: 0.1em;
 }
 
 #main-outlet .topic-list .gf-topic-access-icon {
   display: inline-flex;
-  color: var(--tertiary);
+  color: color-mix(in srgb, var(--tertiary) 86%, var(--primary));
 }
 
 #main-outlet .topic-list .gf-topic-access-icon .d-icon,
 #main-outlet .topic-list .gf-topic-access-icon svg {
-  width: 0.78em;
-  height: 0.78em;
+  width: 0.7em;
+  height: 0.7em;
 }
 
 #main-outlet .topic-list .gf-topic-access-level-3,
 #main-outlet .topic-list .gf-topic-access-level-4 {
-  border-color: color-mix(in srgb, var(--danger) 32%, transparent);
-  background: color-mix(in srgb, var(--danger) 8%, var(--secondary));
+  border-color: color-mix(in srgb, var(--danger) 25%, transparent);
+  background: color-mix(in srgb, var(--danger) 6%, var(--secondary));
+  color: color-mix(in srgb, var(--primary) 82%, var(--danger));
 }
 
 #main-outlet .topic-list .gf-topic-access-level-3 .gf-topic-access-icon,
 #main-outlet .topic-list .gf-topic-access-level-4 .gf-topic-access-icon {
-  color: var(--danger);
+  color: color-mix(in srgb, var(--danger) 82%, var(--primary));
 }
 
 @media screen and (max-width: 767px) {
   #main-outlet .topic-list .gf-topic-access-badge {
-    padding-inline: 0.42em;
+    margin-inline-start: 0.24em;
+    padding-inline: 0.3em;
+    font-size: 0.65em;
   }
-
 }

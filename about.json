@@ -4,7 +4,7 @@
   "license_url": "https://github.com/discourse/graceful/blob/main/LICENSE",
   "about_url": "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040",
   "authors": null,
-  "theme_version": "11.0.51",
+  "theme_version": "11.0.52",
   "minimum_discourse_version": null,
   "maximum_discourse_version": null,
   "assets": {

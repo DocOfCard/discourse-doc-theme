@@ -309,7 +309,7 @@ const GracefulTopicCell = <template>
 
         <div class="topic-item-metadata right gf-topic-copy">
           <div class="main-link gf-topic-title">
-            <span class="topic-statuses"><TopicStatus @topic={{@topic}} @context="topic-list" /></span>
+            <TopicStatus @topic={{@topic}} @context="topic-list" />
             <TopicLink @topic={{@topic}} class="title raw-link raw-topic-link" />
             {{#if (gfTopicAccessLevel @topic)}}
               <span
