@@ -262,23 +262,28 @@ div.cooked {
     vertical-align: middle;
   }
 
-  .gf-topic-row,
-  .gf-topic-left {
+  .gf-topic-row {
     display: block;
     width: 100%;
     min-width: 0;
   }
 
-  .gf-topic-left .pull-left {
-    display: block !important;
-    float: left;
+  .gf-topic-left {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .gf-op-avatar {
+    flex: 0 0 44px;
     width: 44px;
     height: 44px;
     margin: 0 10px 0 0;
     line-height: 0;
   }
 
-  .gf-topic-left .pull-left img.avatar {
+  .gf-op-avatar img.avatar {
     width: 44px;
     height: 44px;
     max-width: 44px;
@@ -287,10 +292,10 @@ div.cooked {
     object-fit: cover;
   }
 
-  .gf-topic-left .topic-item-metadata.right {
+  .gf-topic-copy {
+    flex: 1 1 auto;
     min-width: 0;
     min-height: 44px;
-    margin-left: 54px;
   }
 
   .gf-topic-title {

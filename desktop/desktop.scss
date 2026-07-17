@@ -366,21 +366,22 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
   }
 
   .gf-topic-left {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
     min-width: 0;
     padding-left: 0 !important;
   }
 
-  .gf-topic-left .pull-left {
-    display: block !important;
-    float: left;
+  .gf-op-avatar {
+    flex: 0 0 var(--gf-topic-avatar-size, 44px);
     width: var(--gf-topic-avatar-size, 44px);
     height: var(--gf-topic-avatar-size, 44px);
     margin: 0 var(--gf-topic-avatar-gap, 10px) 0 0;
     line-height: 0;
   }
 
-  .gf-topic-left .pull-left img.avatar {
+  .gf-op-avatar img.avatar {
     width: var(--gf-topic-avatar-size, 44px);
     height: var(--gf-topic-avatar-size, 44px);
     max-width: var(--gf-topic-avatar-size, 44px);
@@ -389,10 +390,10 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
     object-fit: cover;
   }
 
-  .gf-topic-left .topic-item-metadata.right {
+  .gf-topic-copy {
+    flex: 1 1 auto;
     min-width: 0;
     min-height: var(--gf-topic-avatar-size, 44px);
-    margin-left: calc(var(--gf-topic-avatar-size, 44px) + var(--gf-topic-avatar-gap, 10px));
   }
 
   .gf-topic-left .main-link,
@@ -413,10 +414,7 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
     word-break: normal;
   }
 
-  .gf-topic-left .title,
-  .topic-item-metadata.right > .main-link .title,
-  .topic-item-metadata.right > .topic-list-main-link .title,
-  .topic-item-metadata.right > .topic-list-main-link a.title {
+  .gf-topic-left .title {
     font-size: 17px !important;
     line-height: 1.22 !important;
   }

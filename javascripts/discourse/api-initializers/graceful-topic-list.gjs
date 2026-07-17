@@ -295,7 +295,7 @@ const GracefulTopicCell = <template>
   <td class="main-link topic-list-data gf-topic-cell">
     <div class="gf-topic-row">
       <div class="gf-topic-left">
-        <div class="pull-left gf-op-avatar">
+        <div class="gf-op-avatar">
           {{#if @topic.creator}}
             <DUserLink @username={{@topic.creator.username}} aria-hidden="true" tabindex="-1">
               {{dAvatar @topic.creator imageSize="large"}}
@@ -307,7 +307,7 @@ const GracefulTopicCell = <template>
           {{/if}}
         </div>
 
-        <div class="topic-item-metadata right gf-topic-copy">
+        <div class="gf-topic-copy">
           <div class="main-link gf-topic-title">
             <TopicStatus @topic={{@topic}} @context="topic-list" />
             <TopicLink @topic={{@topic}} class="title raw-link raw-topic-link" />
