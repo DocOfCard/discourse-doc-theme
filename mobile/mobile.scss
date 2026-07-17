@@ -410,10 +410,34 @@ div.cooked {
   }
 }
 
-// Keep Discourse's native table layout during mobile bulk selection.
-// Only constrain the checkbox column and arrange the bulk action controls.
+// Keep topic rows as native table rows during mobile bulk selection.
+// The bulk action header has fewer cells than each topic row, so remove it
+// from table-column sizing and lay out only that header with flex.
 .topic-list.bulk-select-enabled {
-  > .topic-list-header > tr > th.bulk-select,
+  > .topic-list-header {
+    display: table-caption;
+    caption-side: top;
+    width: 100%;
+  }
+
+  > .topic-list-header > tr {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  > .topic-list-header > tr > th.default {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  > .topic-list-header > tr > th.gf-last-post-header {
+    flex: 0 0 34px;
+    width: 34px;
+    min-width: 34px;
+    max-width: 34px;
+  }
+
   > tbody.topic-list-body > tr.topic-list-item > td.bulk-select {
     box-sizing: border-box;
     width: 32px;
@@ -422,6 +446,11 @@ div.cooked {
     padding-inline: 4px !important;
     text-align: center;
     vertical-align: middle;
+  }
+
+  > tbody.topic-list-body > tr.topic-list-item > td.gf-topic-cell {
+    width: auto;
+    min-width: 0;
   }
 
   > tbody.topic-list-body > tr.topic-list-item > td.bulk-select input.bulk-select {
