@@ -467,8 +467,8 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
     width: 233px !important;
     min-width: 233px !important;
     max-width: 233px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     box-sizing: border-box;
@@ -631,11 +631,3 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
   color: var(--danger) !important;
 }
 
-
-/* Fix desktop topic list right column vertical rhythm */
-.topic-list tbody.topic-list-body > tr.topic-list-item > td.gf-last-post-cell {
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-  box-sizing: border-box;
-  vertical-align: middle;
-}
