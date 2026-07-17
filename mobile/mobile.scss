@@ -492,3 +492,10 @@ div.cooked {
     white-space: nowrap;
   }
 }
+
+
+@media (max-width: 40rem) {
+  .topic-post .topic-body .topic-meta-data {
+    margin-left: 0;
+  }
+}
