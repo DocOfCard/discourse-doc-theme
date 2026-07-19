@@ -2,6 +2,9 @@ import { concat } from "@ember/helper";
 import { helper } from "@ember/component/helper";
 import { htmlSafe } from "@ember/template";
 import { apiInitializer } from "discourse/lib/api";
+import lazyHash from "discourse/helpers/lazy-hash";
+import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
@@ -311,9 +314,25 @@ const GracefulTopicCell = <template>
         </div>
 
         <div class="gf-topic-copy">
+          <PluginOutlet
+            @name="topic-list-before-link"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
+
           <div class="main-link gf-topic-title">
+            <PluginOutlet
+              @name="topic-list-before-status"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
             <TopicStatus @topic={{@topic}} @context="topic-list" />
             <TopicLink @topic={{@topic}} class="title raw-link raw-topic-link" />
+            {{#if @topic.featured_link}}
+              &nbsp;{{topicFeaturedLink @topic}}
+            {{/if}}
+            <PluginOutlet
+              @name="topic-list-after-title"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
             <UnreadIndicator @topic={{@topic}} />
             {{#if @topic.is_nested_view}}
               {{#if @topic.has_new_replies}}
@@ -326,6 +345,10 @@ const GracefulTopicCell = <template>
                 @url={{@topic.lastUnreadUrl}}
               />
             {{/if}}
+            <PluginOutlet
+              @name="topic-list-after-badges"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
             {{#if (gfTopicAccessLevel @topic)}}
               <span
                 class={{concat "gf-topic-access-badge gf-topic-access-level-" (gfTopicAccessLevel @topic)}}
@@ -336,7 +359,16 @@ const GracefulTopicCell = <template>
                 <span class="gf-topic-access-level">{{gfTopicAccessLabel @topic}}</span>
               </span>
             {{/if}}
+            <PluginOutlet
+              @name="topic-list-main-link-bottom"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
           </div>
+
+          <PluginOutlet
+            @name="topic-list-after-main-link"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
 
           <div class="gf-topic-meta topic-item-stats" aria-label="topic metadata">
             {{#unless @hideCategory}}
