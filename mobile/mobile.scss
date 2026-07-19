@@ -300,8 +300,8 @@ div.cooked {
 
   .gf-topic-title {
     --gf-mobile-topic-title-font-size: 16px;
-    --gf-mobile-topic-badge-height: 1em;
-    --gf-mobile-topic-badge-font-size: 0.75em;
+    --gf-mobile-topic-badge-height: 1.15em;
+    --gf-mobile-topic-badge-font-size: 0.85em;
     min-width: 0;
     padding: 0;
     font-size: var(--gf-mobile-topic-title-font-size);
@@ -345,7 +345,7 @@ div.cooked {
     justify-content: center;
     min-width: var(--gf-mobile-topic-badge-height);
     height: var(--gf-mobile-topic-badge-height);
-    padding: 0 0.25em;
+    padding: 0 0.45em;
     border-radius: 999px;
   }
 
