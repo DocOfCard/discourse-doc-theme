@@ -526,3 +526,14 @@ body.has-full-page-chat {
     font-size: 0.65em;
   }
 }
+
+// Keep calendar/event badges aligned with the topic title without positional offsets.
+.gf-topic-title .header-topic-title-suffix-outlet.event-date-container {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.gf-topic-title .event-date {
+  display: inline-flex;
+  align-items: center;
+}
