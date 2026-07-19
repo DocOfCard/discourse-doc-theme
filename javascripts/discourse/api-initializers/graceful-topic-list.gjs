@@ -1,11 +1,13 @@
 import { concat } from "@ember/helper";
 import { helper } from "@ember/component/helper";
 import { htmlSafe } from "@ember/template";
+import { modifier } from "ember-modifier";
 import { apiInitializer } from "discourse/lib/api";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
+import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
@@ -18,6 +20,40 @@ import DUserLink from "discourse/ui-kit/d-user-link";
 import { longDate } from "discourse/lib/formatter";
 
 const GF_CLEANUP_KEY = "__gracefulTopicListCleanup";
+
+let gfSiteSettings;
+
+const gfTitleFocus = modifier((element) => {
+  const row = element.closest(".topic-list-item");
+  const onFocus = () => row?.classList.add("selected");
+  const onBlur = () => row?.classList.remove("selected");
+
+  element.addEventListener("focus", onFocus);
+  element.addEventListener("blur", onBlur);
+
+  return () => {
+    element.removeEventListener("focus", onFocus);
+    element.removeEventListener("blur", onBlur);
+  };
+});
+
+const gfExpandPinned = helper(function ([topic, expandGloballyPinned, expandAllPinned]) {
+  if (!topic?.pinned) {
+    return false;
+  }
+
+  const showExcerpt = gfIsMobileView()
+    ? gfSiteSettings?.show_pinned_excerpt_mobile
+    : gfSiteSettings?.show_pinned_excerpt_desktop;
+
+  if (!showExcerpt) {
+    return false;
+  }
+
+  return Boolean(
+    (expandGloballyPinned && topic.pinned_globally) || expandAllPinned
+  );
+});
 
 const gfCategoryColorStyle = helper(function ([category]) {
   const raw =
@@ -325,7 +361,11 @@ const GracefulTopicCell = <template>
               @outletArgs={{lazyHash topic=@topic}}
             />
             <TopicStatus @topic={{@topic}} @context="topic-list" />
-            <TopicLink @topic={{@topic}} class="title raw-link raw-topic-link" />
+            <TopicLink
+              {{gfTitleFocus}}
+              @topic={{@topic}}
+              class="title raw-link raw-topic-link"
+            />
             {{#if @topic.featured_link}}
               &nbsp;{{topicFeaturedLink @topic}}
             {{/if}}
@@ -359,9 +399,15 @@ const GracefulTopicCell = <template>
                 <span class="gf-topic-access-level">{{gfTopicAccessLabel @topic}}</span>
               </span>
             {{/if}}
+            {{#if (gfExpandPinned @topic @expandGloballyPinned @expandAllPinned)}}
+              <TopicExcerpt @topic={{@topic}} />
+            {{/if}}
             <PluginOutlet
               @name="topic-list-main-link-bottom"
-              @outletArgs={{lazyHash topic=@topic}}
+              @outletArgs={{lazyHash
+                topic=@topic
+                expandPinned=(gfExpandPinned @topic @expandGloballyPinned @expandAllPinned)
+              }}
             />
           </div>
 
@@ -479,6 +525,7 @@ const GracefulLastPostCell = <template>
 </template>;
 
 export default apiInitializer((api) => {
+  gfSiteSettings = api.container.lookup("service:site-settings");
   globalThis[GF_CLEANUP_KEY]?.();
 
   let patchTimer = null;
