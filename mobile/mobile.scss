@@ -300,8 +300,11 @@ div.cooked {
 
   .gf-topic-title {
     --gf-mobile-topic-title-font-size: 16px;
+    --gf-mobile-topic-badge-height: 1em;
+    --gf-mobile-topic-badge-font-size: 0.75em;
     min-width: 0;
     padding: 0;
+    font-size: var(--gf-mobile-topic-title-font-size);
     line-height: 1.22;
   }
 
@@ -320,13 +323,37 @@ div.cooked {
   }
 
   .gf-topic-title .title {
-    font-size: var(--gf-mobile-topic-title-font-size);
+    font-size: 1em;
     line-height: 1.22;
     overflow-wrap: anywhere;
   }
 
-  .gf-topic-title .topic-post-badges .badge-notification {
-    font-size: var(--gf-mobile-topic-title-font-size);
+  // Keep every badge beside the title proportional to the title font size.
+  .gf-topic-title .badge-notification,
+  .gf-topic-title .gf-topic-access-badge,
+  .gf-topic-title .event-date {
+    box-sizing: border-box;
+    min-height: var(--gf-mobile-topic-badge-height);
+    font-size: var(--gf-mobile-topic-badge-font-size);
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  .gf-topic-title .badge-notification {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--gf-mobile-topic-badge-height);
+    height: var(--gf-mobile-topic-badge-height);
+    padding: 0 0.25em;
+    border-radius: 999px;
+  }
+
+  .gf-topic-title .gf-topic-access-badge,
+  .gf-topic-title .event-date {
+    display: inline-flex;
+    align-items: center;
+    height: var(--gf-mobile-topic-badge-height);
   }
 
   .gf-topic-meta {
