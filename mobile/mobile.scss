@@ -300,7 +300,6 @@ div.cooked {
 
   .gf-topic-title {
     --gf-mobile-topic-title-font-size: 16px;
-    --gf-mobile-topic-badge-height: 1.15em;
     --gf-mobile-topic-badge-font-size: 0.85em;
     min-width: 0;
     padding: 0;
@@ -328,32 +327,11 @@ div.cooked {
     overflow-wrap: anywhere;
   }
 
-  // Keep every badge beside the title proportional to the title font size.
+  // Keep the desktop badge geometry and only scale badge text on mobile.
   .gf-topic-title .badge-notification,
   .gf-topic-title .gf-topic-access-badge,
   .gf-topic-title .event-date {
-    box-sizing: border-box;
-    min-height: var(--gf-mobile-topic-badge-height);
     font-size: var(--gf-mobile-topic-badge-font-size);
-    line-height: 1;
-    vertical-align: middle;
-  }
-
-  .gf-topic-title .badge-notification {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: var(--gf-mobile-topic-badge-height);
-    height: var(--gf-mobile-topic-badge-height);
-    padding: 0 0.45em;
-    border-radius: 999px;
-  }
-
-  .gf-topic-title .gf-topic-access-badge,
-  .gf-topic-title .event-date {
-    display: inline-flex;
-    align-items: center;
-    height: var(--gf-mobile-topic-badge-height);
   }
 
   .gf-topic-meta {
