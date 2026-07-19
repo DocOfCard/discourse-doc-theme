@@ -2,7 +2,10 @@ import { concat } from "@ember/helper";
 import { helper } from "@ember/component/helper";
 import { htmlSafe } from "@ember/template";
 import { apiInitializer } from "discourse/lib/api";
+import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import TopicLink from "discourse/components/topic-list/topic-link";
+import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
+import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
@@ -311,6 +314,18 @@ const GracefulTopicCell = <template>
           <div class="main-link gf-topic-title">
             <TopicStatus @topic={{@topic}} @context="topic-list" />
             <TopicLink @topic={{@topic}} class="title raw-link raw-topic-link" />
+            <UnreadIndicator @topic={{@topic}} />
+            {{#if @topic.is_nested_view}}
+              {{#if @topic.has_new_replies}}
+                <NewRepliesDot @topic={{@topic}} />
+              {{/if}}
+            {{else if @showTopicPostBadges}}
+              <TopicPostBadges
+                @unreadPosts={{@topic.unread_posts}}
+                @unseen={{@topic.unseen}}
+                @url={{@topic.lastUnreadUrl}}
+              />
+            {{/if}}
             {{#if (gfTopicAccessLevel @topic)}}
               <span
                 class={{concat "gf-topic-access-badge gf-topic-access-level-" (gfTopicAccessLevel @topic)}}
