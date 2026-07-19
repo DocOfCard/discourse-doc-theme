@@ -506,3 +506,19 @@ div.cooked {
     margin-left: 0;
   }
 }
+
+
+/* v11.0.74 Mobile badge scale */
+@media (max-width: 767px) {
+  .gf-topic-title .header-topic-title-suffix-outlet.event-date-container,
+  .gf-topic-title .topic-post-badges,
+  .gf-topic-title .badge-category__wrapper,
+  .gf-topic-title .badge-category,
+  .gf-topic-title .badge {
+    font-size: 0.875em;
+  }
+
+  .gf-topic-title .badge-notification {
+    font-size: 0.85em;
+  }
+}
