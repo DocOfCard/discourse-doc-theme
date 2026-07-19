@@ -522,3 +522,18 @@ div.cooked {
     font-size: 0.85em;
   }
 }
+
+
+
+/* v11.0.75 Align event badge with title */
+@media (max-width: 767px) {
+  .gf-topic-title .header-topic-title-suffix-outlet.event-date-container {
+    display: inline-flex;
+    vertical-align: middle;
+  }
+
+  .gf-topic-title .event-date {
+    display: inline-flex;
+    align-items: center;
+  }
+}
