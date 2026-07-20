@@ -649,3 +649,23 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
     font-size:0.875em;
   }
 }
+
+/* Move the clicked/selected topic indicator outside the avatar area. */
+.topic-list > tbody.topic-list-body > tr.topic-list-item.selected > td:first-child,
+.topic-list > tbody.topic-list-body > tr.topic-list-item.topic-list-item--selected > td:first-child {
+  position: relative;
+  border-left: 0 !important;
+  box-shadow: none !important;
+}
+
+.topic-list > tbody.topic-list-body > tr.topic-list-item.selected > td:first-child::before,
+.topic-list > tbody.topic-list-body > tr.topic-list-item.topic-list-item--selected > td:first-child::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -6px;
+  width: 4px;
+  background: var(--tertiary);
+  pointer-events: none;
+}
