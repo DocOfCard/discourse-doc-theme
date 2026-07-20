@@ -109,6 +109,83 @@ const gfLongDate = helper(function ([date]) {
   return longDate(new Date(date)) || "";
 });
 
+function gfShortRelativeTime(dateOrTimestamp) {
+  if (!dateOrTimestamp) {
+    return "";
+  }
+
+  const timestamp =
+    typeof dateOrTimestamp === "number"
+      ? dateOrTimestamp
+      : new Date(dateOrTimestamp).getTime();
+
+  if (!Number.isFinite(timestamp)) {
+    return "";
+  }
+
+  const diff = Math.max(0, Date.now() - timestamp);
+  const minute = 60 * 1000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+
+  if (diff < minute) {
+    return "<1m";
+  }
+
+  if (diff < hour) {
+    return `${Math.floor(diff / minute)}m`;
+  }
+
+  if (diff < day) {
+    return `${Math.floor(diff / hour)}h`;
+  }
+
+  return `${Math.floor(diff / day)}d`;
+}
+
+const gfShortRelativeDate = helper(function ([date]) {
+  return gfShortRelativeTime(date);
+});
+
+const gfPostsHeatClass = helper(function ([topic]) {
+  const count = Number.parseInt(
+    topic?.replyCount || topic?.get?.("replyCount") || 0,
+    10
+  );
+
+  if (count >= 50) {
+    return "gf-posts-heat-high";
+  }
+
+  if (count >= 15) {
+    return "gf-posts-heat-med";
+  }
+
+  if (count >= 10) {
+    return "gf-posts-heat-low";
+  }
+
+  return "";
+});
+
+const gfViewsHeatClass = helper(function ([topic]) {
+  const count = Number.parseInt(topic?.views || topic?.get?.("views") || 0, 10);
+
+  if (count >= 1000) {
+    return "gf-views-heat-high";
+  }
+
+  if (count >= 500) {
+    return "gf-views-heat-med";
+  }
+
+  if (count >= 100) {
+    return "gf-views-heat-low";
+  }
+
+  return "";
+});
+
 function gfIsMobileView() {
   return (
     document.documentElement.classList.contains("mobile-view") ||
