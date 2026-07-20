@@ -539,33 +539,18 @@ body.has-full-page-chat {
 }
 
 
-/* v11.0.74 Mobile badge scale */
-@media (max-width: 767px) {
-  .gf-topic-title .header-topic-title-suffix-outlet.event-date-container,
+
+
+
+/* v11.0.77 Title suffix badges follow title font size only */
+.gf-topic-left .topic-post-badges,
+.gf-topic-left .header-topic-title-suffix-outlet{
+  font-size:1em;
+}
+
+@media (max-width:767px){
   .gf-topic-title .topic-post-badges,
-  .gf-topic-title .badge-category__wrapper,
-  .gf-topic-title .badge-category,
-  .gf-topic-title .badge {
-    font-size: 0.875em;
-  }
-
-  .gf-topic-title .badge-notification {
-    font-size: 0.85em;
+  .gf-topic-title .header-topic-title-suffix-outlet{
+    font-size:0.875em;
   }
 }
-
-
-
-/* v11.0.75 Align event badge with title */
-@media (max-width: 767px) {
-  .gf-topic-title .header-topic-title-suffix-outlet.event-date-container {
-    display: inline-flex;
-    vertical-align: middle;
-  }
-
-  .gf-topic-title .event-date {
-    display: inline-flex;
-    align-items: center;
-  }
-}
-

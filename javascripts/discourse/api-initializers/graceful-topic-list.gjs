@@ -270,6 +270,10 @@ async function fetchLastReplyExcerpt(topicId, lastPostUrl, replies) {
           return {
             excerpt: plainTextFromCooked(post.cooked).slice(0, 180),
             postNumber: Number(post.post_number),
+            username: post.username || "",
+            displayName: post.name || post.username || "",
+            avatarTemplate: post.avatar_template || "",
+            createdAt: post.created_at || "",
           };
         }
       } catch {
@@ -310,6 +314,27 @@ function patchDesktopReplyExcerpts() {
         }
 
         const replyUrl = gfReplyUrl(lastPostUrl, result.postNumber);
+        const dateLink = row.querySelector(".gf-last-date");
+        const avatarLink = row.querySelector(".gf-last-avatar-inline a");
+        const avatarImage = avatarLink?.querySelector("img.avatar");
+
+        if (replyUrl && dateLink) {
+          dateLink.href = replyUrl;
+          if (result.createdAt) {
+            dateLink.textContent = gfShortRelativeTime(result.createdAt);
+          }
+        }
+
+        if (result.username && avatarLink) {
+          avatarLink.href = "/u/" + encodeURIComponent(result.username);
+          avatarLink.dataset.userCard = result.username;
+          avatarLink.setAttribute("aria-label", result.username + " 的个人资料");
+        }
+
+        if (avatarImage && result.avatarTemplate) {
+          avatarImage.src = result.avatarTemplate.replace("{size}", "48");
+          avatarImage.title = result.displayName || result.username;
+        }
 
         if (!replyUrl) {
           excerptNode.textContent = result.excerpt;
