@@ -376,7 +376,7 @@ const GracefulLastPostCell = <template>
   <td class="topic-list-data gf-last-post-cell">
     <div class="gf-desktop-stats">
       <div class="gf-stat-box gf-stat-posts">
-        <span class="gf-stat-icon" aria-hidden="true">{{dIcon "comment"}}</span>
+        <span class="gf-stat-icon" aria-hidden="true">{{dIcon "far-comment"}}</span>
         <span class={{concat "gf-stat-number " (gfPostsHeatClass @topic)}}>{{@topic.replyCount}}</span>
         <span class="gf-stat-label">POSTS</span>
       </div>
