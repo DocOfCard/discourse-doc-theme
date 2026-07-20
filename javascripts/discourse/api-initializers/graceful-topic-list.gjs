@@ -246,42 +246,34 @@ function gfReplyUrl(lastPostUrl, postNumber) {
   return url.replace(/\/\d+(?:\?.*)?$/, "/" + postNumber);
 }
 
-async function fetchLastReplyExcerpt(topicId, lastPostUrl, replies) {
+async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
   const lastPostNumber = gfPostNumberFromUrl(lastPostUrl);
-  const fallbackPostNumber = Number.parseInt(replies || "0", 10) + 1;
-  const highestPostNumber = Math.max(lastPostNumber, fallbackPostNumber);
 
-  if (!topicId || highestPostNumber <= 1) {
+  if (!topicId || lastPostNumber <= 1) {
     return "";
   }
 
-  const cacheKey = topicId + ":" + highestPostNumber;
+  const cacheKey = topicId + ":" + lastPostNumber;
 
   if (desktopExcerptCache.has(cacheKey)) {
     return desktopExcerptCache.get(cacheKey);
   }
 
   const promise = (async () => {
-    for (let postNumber = highestPostNumber; postNumber >= 2; postNumber--) {
-      try {
-        const post = await fetchPostByNumber(topicId, postNumber);
+    try {
+      const post = await fetchPostByNumber(topicId, lastPostNumber);
 
-        if (gfUsableReplyPost(post)) {
-          return {
-            excerpt: plainTextFromCooked(post.cooked).slice(0, 180),
-            postNumber: Number(post.post_number),
-            username: post.username || "",
-            displayName: post.name || post.username || "",
-            avatarTemplate: post.avatar_template || "",
-            createdAt: post.created_at || "",
-          };
-        }
-      } catch {
-        // Keep searching older reply numbers. A deleted or hidden post can fail here.
+      if (!gfUsableReplyPost(post)) {
+        return "";
       }
-    }
 
-    return "";
+      return {
+        excerpt: plainTextFromCooked(post.cooked).slice(0, 180),
+        postNumber: Number(post.post_number),
+      };
+    } catch {
+      return "";
+    }
   })();
 
   desktopExcerptCache.set(cacheKey, promise);
@@ -308,33 +300,12 @@ function patchDesktopReplyExcerpts() {
       const lastPostUrl = row.querySelector(".gf-last-date")?.getAttribute("href");
 
       excerptNode.dataset.gfExcerptLoaded = "true";
-      fetchLastReplyExcerpt(topicId, lastPostUrl, replies).then((result) => {
+      fetchLastReplyExcerpt(topicId, lastPostUrl).then((result) => {
         if (!result?.excerpt) {
           return;
         }
 
         const replyUrl = gfReplyUrl(lastPostUrl, result.postNumber);
-        const dateLink = row.querySelector(".gf-last-date");
-        const avatarLink = row.querySelector(".gf-last-avatar-inline a");
-        const avatarImage = avatarLink?.querySelector("img.avatar");
-
-        if (replyUrl && dateLink) {
-          dateLink.href = replyUrl;
-          if (result.createdAt) {
-            dateLink.textContent = gfShortRelativeTime(result.createdAt);
-          }
-        }
-
-        if (result.username && avatarLink) {
-          avatarLink.href = "/u/" + encodeURIComponent(result.username);
-          avatarLink.dataset.userCard = result.username;
-          avatarLink.setAttribute("aria-label", result.username + " 的个人资料");
-        }
-
-        if (avatarImage && result.avatarTemplate) {
-          avatarImage.src = result.avatarTemplate.replace("{size}", "48");
-          avatarImage.title = result.displayName || result.username;
-        }
 
         if (!replyUrl) {
           excerptNode.textContent = result.excerpt;
