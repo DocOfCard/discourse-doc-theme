@@ -8,3 +8,9 @@ tile_background: true
 no_background_image:
   default: false
   description: Disable the background image and tiling settings above.
+
+enable_topic_excerpt_fallback:
+  default: true
+  description:
+    zh_CN: 插件摘要不可用时由主题生成摘要
+    en: Generate excerpts in the theme when plugin excerpts are unavailable

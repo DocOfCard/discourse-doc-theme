@@ -2,6 +2,7 @@ import { concat } from "@ember/helper";
 import { helper } from "@ember/component/helper";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import themeSettings from "discourse/lib/theme-settings-store";
 import { apiInitializer } from "discourse/lib/api";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
@@ -18,6 +19,8 @@ import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { longDate } from "discourse/lib/formatter";
+import TopicListExcerptPlugin from "../components/topic-list-excerpt-plugin";
+import TopicListExcerptTheme from "../components/topic-list-excerpt-theme";
 
 let gfSiteSettings;
 
@@ -114,301 +117,39 @@ function gfIsMobileView() {
   );
 }
 
-function plainTextFromCooked(cooked) {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = cooked || "";
-  return (wrapper.textContent || "").replace(/\s+/g, " ").trim();
-}
-
-function gfShortRelativeTime(dateOrTimestamp) {
-  if (!dateOrTimestamp) {
-    return "";
-  }
-
-  const timestamp =
-    typeof dateOrTimestamp === "number"
-      ? dateOrTimestamp
-      : new Date(dateOrTimestamp).getTime();
-
-  if (!Number.isFinite(timestamp)) {
-    return "";
-  }
-
-  const diff = Math.max(0, Date.now() - timestamp);
-  const minute = 60 * 1000;
-  const hour = 60 * minute;
-  const day = 24 * hour;
-
-  if (diff < minute) {
-    return "<1m";
-  }
-
-  if (diff < hour) {
-    return Math.floor(diff / minute) + "m";
-  }
-
-  if (diff < day) {
-    return Math.floor(diff / hour) + "h";
-  }
-
-  return Math.floor(diff / day) + "d";
-}
-
-const gfShortRelativeDate = helper(function ([date]) {
-  return gfShortRelativeTime(date);
-});
-
-const gfPostsHeatClass = helper(function ([topic]) {
-  const count = Number.parseInt(
-    topic?.replyCount || topic?.get?.("replyCount") || 0,
-    10
-  );
-
-  if (count >= 50) {
-    return "gf-posts-heat-high";
-  }
-
-  if (count >= 15) {
-    return "gf-posts-heat-med";
-  }
-
-  if (count >= 10) {
-    return "gf-posts-heat-low";
-  }
-
-  return "";
-});
-
-
-
-
-
-const gfViewsHeatClass = helper(function ([topic]) {
-  const count = Number.parseInt(topic?.views || topic?.get?.("views") || 0, 10);
-  if (count >= 1000) {
-    return "gf-views-heat-high";
-  }
-  if (count >= 500) {
-    return "gf-views-heat-med";
-  }
-  if (count >= 100) {
-    return "gf-views-heat-low";
-  }
-  return "";
-});
-
-const desktopExcerptCache = new Map();
-const desktopExcerptQueue = [];
-const DESKTOP_EXCERPT_MAX_CONCURRENCY = 2;
-let desktopExcerptActiveRequests = 0;
-
-function runNextDesktopExcerptRequest() {
-  while (
-    desktopExcerptActiveRequests < DESKTOP_EXCERPT_MAX_CONCURRENCY &&
-    desktopExcerptQueue.length > 0
-  ) {
-    const { task, resolve, reject } = desktopExcerptQueue.shift();
-    desktopExcerptActiveRequests += 1;
-
-    Promise.resolve()
-      .then(task)
-      .then(resolve, reject)
-      .finally(() => {
-        desktopExcerptActiveRequests -= 1;
-        runNextDesktopExcerptRequest();
-      });
-  }
-}
-
-function enqueueDesktopExcerptRequest(task) {
-  return new Promise((resolve, reject) => {
-    desktopExcerptQueue.push({ task, resolve, reject });
-    runNextDesktopExcerptRequest();
-  });
-}
-
-function gfPostNumberFromUrl(url) {
-  const match = String(url || "").match(/\/(\d+)(?:\?.*)?$/);
-  const postNumber = Number.parseInt(match?.[1] || "0", 10);
-
-  return Number.isFinite(postNumber) && postNumber > 1 ? postNumber : 0;
-}
-
-async function fetchPostByNumber(topicId, postNumber) {
-  if (!topicId || !postNumber || postNumber <= 1) {
-    return null;
-  }
-
-  const response = await fetch(
-    "/posts/by_number/" + topicId + "/" + postNumber + ".json",
-    { credentials: "same-origin" }
-  );
-
-  if (!response.ok) {
-    return null;
-  }
-
-  const data = await response.json();
-  return data?.post || data;
-}
-
-function gfUsableReplyPost(post) {
+function gfTopicValue(topic, camelKey, snakeKey) {
   return (
-    post &&
-    Number(post.post_number) > 1 &&
-    !post.hidden &&
-    !post.deleted_at &&
-    String(post.cooked || "").trim()
+    topic?.[camelKey] ??
+    topic?.[snakeKey] ??
+    topic?.get?.(camelKey) ??
+    topic?.get?.(snakeKey)
   );
 }
 
-function gfReplyUrl(lastPostUrl, postNumber) {
-  const url = String(lastPostUrl || "");
+const gfPluginExcerpt = helper(function ([topic]) {
+  const value = gfTopicValue(topic, "lastPostExcerpt", "last_post_excerpt");
+  return typeof value === "string" ? value.trim() : "";
+});
 
-  if (!url || !postNumber) {
-    return "";
+const gfHasPluginExcerpt = helper(function ([topic]) {
+  const value = gfTopicValue(topic, "lastPostExcerpt", "last_post_excerpt");
+  return typeof value === "string" && value.trim().length > 0;
+});
+
+const gfCanThemeFallback = helper(function ([topic]) {
+  if (!themeSettings.enable_topic_excerpt_fallback) {
+    return false;
   }
 
-  return url.replace(/\/\d+(?:\?.*)?$/, "/" + postNumber);
-}
-
-async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
-  const lastPostNumber = gfPostNumberFromUrl(lastPostUrl);
-
-  if (!topicId || lastPostNumber <= 1) {
-    return "";
-  }
-
-  const cacheKey = topicId + ":" + lastPostNumber;
-
-  if (desktopExcerptCache.has(cacheKey)) {
-    return desktopExcerptCache.get(cacheKey);
-  }
-
-  const promise = enqueueDesktopExcerptRequest(async () => {
-    try {
-      const post = await fetchPostByNumber(topicId, lastPostNumber);
-
-      if (!gfUsableReplyPost(post)) {
-        return "";
-      }
-
-      return {
-        excerpt: plainTextFromCooked(post.cooked).slice(0, 180),
-        postNumber: Number(post.post_number),
-      };
-    } catch {
-      return "";
-    }
-  });
-
-  desktopExcerptCache.set(cacheKey, promise);
-  return promise;
-}
-
-let desktopExcerptObserver = null;
-const desktopExcerptTargets = new WeakMap();
-
-function loadDesktopReplyExcerpt(excerptNode, topicId, lastPostUrl) {
-  if (!excerptNode || excerptNode.dataset.gfExcerptLoaded === "true") {
-    return;
-  }
-
-  if (!topicId || !lastPostUrl) {
-    return;
-  }
-
-  excerptNode.dataset.gfExcerptLoaded = "true";
-
-  fetchLastReplyExcerpt(topicId, lastPostUrl).then((result) => {
-    if (!result?.excerpt || !excerptNode.isConnected) {
-      return;
-    }
-
-    const replyUrl = gfReplyUrl(lastPostUrl, result.postNumber);
-
-    if (!replyUrl) {
-      excerptNode.textContent = result.excerpt;
-      return;
-    }
-
-    const link = document.createElement("a");
-    link.className = "gf-last-reply-link";
-    link.href = replyUrl;
-    link.textContent = result.excerpt;
-
-    excerptNode.replaceChildren(link);
-  });
-}
-
-function ensureDesktopExcerptObserver() {
-  if (desktopExcerptObserver || typeof IntersectionObserver === "undefined") {
-    return desktopExcerptObserver;
-  }
-
-  desktopExcerptObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) {
-          continue;
-        }
-
-        desktopExcerptObserver.unobserve(entry.target);
-
-        const target = desktopExcerptTargets.get(entry.target);
-        if (!target) {
-          continue;
-        }
-
-        loadDesktopReplyExcerpt(
-          entry.target,
-          target.topicId,
-          target.lastPostUrl
-        );
-      }
-    },
-    {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.01,
-    }
+  const value = gfTopicValue(
+    topic,
+    "canThemeExcerptFallback",
+    "can_theme_excerpt_fallback"
   );
 
-  return desktopExcerptObserver;
-}
-
-const gfLazyExcerpt = modifier((element, [topic]) => {
-  if (gfIsMobileView()) {
-    return;
-  }
-
-  const topicId = Number.parseInt(
-    topic?.id || topic?.get?.("id") || "0",
-    10
-  );
-  const lastPostUrl = topic?.lastPostUrl || topic?.get?.("lastPostUrl") || "";
-  const replyCount = Number.parseInt(
-    topic?.replyCount || topic?.get?.("replyCount") || "0",
-    10
-  );
-
-  if (!topicId || !lastPostUrl || replyCount <= 0) {
-    return;
-  }
-
-  desktopExcerptTargets.set(element, { topicId, lastPostUrl });
-
-  const observer = ensureDesktopExcerptObserver();
-  if (observer) {
-    observer.observe(element);
-  } else {
-    loadDesktopReplyExcerpt(element, topicId, lastPostUrl);
-  }
-
-  return () => {
-    desktopExcerptObserver?.unobserve(element);
-    desktopExcerptTargets.delete(element);
-  };
+  // Older or absent plugin: allow the theme fallback. The current plugin
+  // explicitly returns false for permission-restricted topics.
+  return value !== false;
 });
 
 const GracefulTopicCell = <template>
@@ -587,13 +328,14 @@ const GracefulLastPostCell = <template>
             {{/if}}
           </div>
 
-          <div class="gf-last-reply-excerpt" {{gfLazyExcerpt @topic}}>
-            {{#if @topic.lastPosterUser}}
-              <DUserLink class="gf-last-author" @username={{@topic.lastPosterUser.username}}>
-                {{@topic.lastPosterUser.username}}
-              </DUserLink>
-            {{/if}}
-          </div>
+          {{#if (gfHasPluginExcerpt @topic)}}
+            <TopicListExcerptPlugin
+              @topic={{@topic}}
+              @excerpt={{gfPluginExcerpt @topic}}
+            />
+          {{else if (gfCanThemeFallback @topic)}}
+            <TopicListExcerptTheme @topic={{@topic}} />
+          {{/if}}
         </div>
       {{else}}
         <div class="gf-no-reply">No one has replied</div>
