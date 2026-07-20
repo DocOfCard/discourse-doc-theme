@@ -1027,3 +1027,72 @@ div.cooked {
     }
   }
 }
+
+// v12.1.5 mobile fix: use one true inline formatting context for title
+// statuses, title text, suffix outlets and trailing badges.
+@media screen and (max-width: 767px) {
+  #main-outlet .topic-list {
+    .gf-topic-title-line {
+      display: block !important;
+      width: 100%;
+      min-width: 0;
+      max-height: 2.7em;
+      overflow: hidden;
+      white-space: normal;
+      line-height: 1.35;
+      -webkit-box-orient: initial;
+      -webkit-line-clamp: initial;
+    }
+
+    .gf-topic-title-line > *,
+    .gf-topic-title-line .topic-statuses,
+    .gf-topic-title-line .header-topic-title-suffix-outlet,
+    .gf-topic-title-line .topic-post-badges {
+      display: inline !important;
+      vertical-align: baseline;
+    }
+
+    .gf-topic-title-line .topic-statuses {
+      margin: 0 0.22em 0 0;
+      white-space: nowrap;
+    }
+
+    .gf-topic-title-line .topic-statuses .topic-status,
+    .gf-topic-title-line .topic-statuses a.topic-status {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      margin: 0 0.08em 0 0;
+      padding: 0;
+      line-height: 1;
+      vertical-align: -0.08em;
+    }
+
+    .gf-topic-title-line .topic-statuses .d-icon {
+      width: 0.82em;
+      height: 0.82em;
+      margin: 0;
+    }
+
+    .gf-topic-title-line .title {
+      display: inline !important;
+      vertical-align: baseline;
+    }
+
+    .gf-topic-title-line .header-topic-title-suffix-outlet,
+    .gf-topic-title-line .topic-post-badges,
+    .gf-topic-title-line .unread-indicator,
+    .gf-topic-title-line .gf-topic-access-badge,
+    .gf-topic-title-line .event-date {
+      margin-inline-start: 0.25em;
+    }
+
+    .gf-topic-title-line .badge-notification,
+    .gf-topic-title-line .unread-indicator,
+    .gf-topic-title-line .gf-topic-access-badge,
+    .gf-topic-title-line .event-date {
+      display: inline-flex !important;
+      vertical-align: 0.08em;
+    }
+  }
+}
