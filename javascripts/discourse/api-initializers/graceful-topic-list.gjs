@@ -200,6 +200,34 @@ const gfViewsHeatClass = helper(function ([topic]) {
 });
 
 const desktopExcerptCache = new Map();
+const desktopExcerptQueue = [];
+const DESKTOP_EXCERPT_MAX_CONCURRENCY = 2;
+let desktopExcerptActiveRequests = 0;
+
+function runNextDesktopExcerptRequest() {
+  while (
+    desktopExcerptActiveRequests < DESKTOP_EXCERPT_MAX_CONCURRENCY &&
+    desktopExcerptQueue.length > 0
+  ) {
+    const { task, resolve, reject } = desktopExcerptQueue.shift();
+    desktopExcerptActiveRequests += 1;
+
+    Promise.resolve()
+      .then(task)
+      .then(resolve, reject)
+      .finally(() => {
+        desktopExcerptActiveRequests -= 1;
+        runNextDesktopExcerptRequest();
+      });
+  }
+}
+
+function enqueueDesktopExcerptRequest(task) {
+  return new Promise((resolve, reject) => {
+    desktopExcerptQueue.push({ task, resolve, reject });
+    runNextDesktopExcerptRequest();
+  });
+}
 
 function gfPostNumberFromUrl(url) {
   const match = String(url || "").match(/\/(\d+)(?:\?.*)?$/);
@@ -259,7 +287,7 @@ async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
     return desktopExcerptCache.get(cacheKey);
   }
 
-  const promise = (async () => {
+  const promise = enqueueDesktopExcerptRequest(async () => {
     try {
       const post = await fetchPostByNumber(topicId, lastPostNumber);
 
@@ -274,7 +302,7 @@ async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
     } catch {
       return "";
     }
-  })();
+  });
 
   desktopExcerptCache.set(cacheKey, promise);
   return promise;

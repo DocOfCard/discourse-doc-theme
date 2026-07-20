@@ -16,20 +16,3 @@ $default-background-dynamic: dark-light-choose(
     )};
   --default-background-dynamic: url(#{$default-background-dynamic});
 }
-
-
-
-
-
-/* v11.0.77 Title suffix badges follow title font size only */
-.gf-topic-left .topic-post-badges,
-.gf-topic-left .header-topic-title-suffix-outlet{
-  font-size:1em;
-}
-
-@media (max-width:767px){
-  .gf-topic-title .topic-post-badges,
-  .gf-topic-title .header-topic-title-suffix-outlet{
-    font-size:0.875em;
-  }
-}
