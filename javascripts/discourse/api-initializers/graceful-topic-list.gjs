@@ -252,49 +252,51 @@ const GracefulTopicCell = <template>
           />
 
           <div class="main-link gf-topic-title">
-            <PluginOutlet
-              @name="topic-list-before-status"
-              @outletArgs={{lazyHash topic=@topic}}
-            />
-            <TopicStatus @topic={{@topic}} @context="topic-list" />
-            <TopicLink
-              {{gfTitleFocus}}
-              @topic={{@topic}}
-              class="title raw-link raw-topic-link"
-            />
-            {{#if @topic.featured_link}}
-              &nbsp;{{topicFeaturedLink @topic}}
-            {{/if}}
-            <PluginOutlet
-              @name="topic-list-after-title"
-              @outletArgs={{lazyHash topic=@topic}}
-            />
-            <UnreadIndicator @topic={{@topic}} />
-            {{#if @topic.is_nested_view}}
-              {{#if @topic.has_new_replies}}
-                <NewRepliesDot @topic={{@topic}} />
-              {{/if}}
-            {{else if @showTopicPostBadges}}
-              <TopicPostBadges
-                @unreadPosts={{@topic.unread_posts}}
-                @unseen={{@topic.unseen}}
-                @url={{@topic.lastUnreadUrl}}
+            <span class="gf-topic-title-line">
+              <PluginOutlet
+                @name="topic-list-before-status"
+                @outletArgs={{lazyHash topic=@topic}}
               />
-            {{/if}}
-            <PluginOutlet
-              @name="topic-list-after-badges"
-              @outletArgs={{lazyHash topic=@topic}}
-            />
-            {{#if (gfTopicAccessLevel @topic)}}
-              <span
-                class={{concat "gf-topic-access-badge gf-topic-access-level-" (gfTopicAccessLevel @topic)}}
-                title={{gfTopicAccessTitle @topic}}
-                aria-label={{gfTopicAccessTitle @topic}}
-              >
-                <span class="gf-topic-access-icon" aria-hidden="true">{{dIcon "lock"}}</span>
-                <span class="gf-topic-access-level">{{gfTopicAccessLabel @topic}}</span>
-              </span>
-            {{/if}}
+              <TopicStatus @topic={{@topic}} @context="topic-list" />
+              <TopicLink
+                {{gfTitleFocus}}
+                @topic={{@topic}}
+                class="title raw-link raw-topic-link"
+              />
+              {{#if @topic.featured_link}}
+                &nbsp;{{topicFeaturedLink @topic}}
+              {{/if}}
+              <PluginOutlet
+                @name="topic-list-after-title"
+                @outletArgs={{lazyHash topic=@topic}}
+              />
+              <UnreadIndicator @topic={{@topic}} />
+              {{#if @topic.is_nested_view}}
+                {{#if @topic.has_new_replies}}
+                  <NewRepliesDot @topic={{@topic}} />
+                {{/if}}
+              {{else if @showTopicPostBadges}}
+                <TopicPostBadges
+                  @unreadPosts={{@topic.unread_posts}}
+                  @unseen={{@topic.unseen}}
+                  @url={{@topic.lastUnreadUrl}}
+                />
+              {{/if}}
+              <PluginOutlet
+                @name="topic-list-after-badges"
+                @outletArgs={{lazyHash topic=@topic}}
+              />
+              {{#if (gfTopicAccessLevel @topic)}}
+                <span
+                  class={{concat "gf-topic-access-badge gf-topic-access-level-" (gfTopicAccessLevel @topic)}}
+                  title={{gfTopicAccessTitle @topic}}
+                  aria-label={{gfTopicAccessTitle @topic}}
+                >
+                  <span class="gf-topic-access-icon" aria-hidden="true">{{dIcon "lock"}}</span>
+                  <span class="gf-topic-access-level">{{gfTopicAccessLabel @topic}}</span>
+                </span>
+              {{/if}}
+            </span>
             {{#if (gfExpandPinned @topic @expandGloballyPinned @expandAllPinned)}}
               <TopicExcerpt @topic={{@topic}} />
             {{/if}}

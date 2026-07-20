@@ -972,3 +972,58 @@ div.cooked {
     }
   }
 }
+
+// v12.1.4 mobile refinements: compact unread badge and keep all title
+// prefix/status/suffix badges in the same clamped title flow.
+@media screen and (max-width: 767px) {
+  #main-outlet .topic-list {
+    .gf-topic-title {
+      display: block !important;
+      overflow: visible;
+      -webkit-line-clamp: initial;
+    }
+
+    .gf-topic-title-line {
+      display: -webkit-box;
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      white-space: normal;
+      line-height: 1.35;
+    }
+
+    .gf-topic-title-line > *,
+    .gf-topic-title-line .topic-statuses,
+    .gf-topic-title-line .topic-post-badges,
+    .gf-topic-title-line .header-topic-title-suffix-outlet,
+    .gf-topic-title-line .badge-notification,
+    .gf-topic-title-line .unread-indicator,
+    .gf-topic-title-line .gf-topic-access-badge,
+    .gf-topic-title-line .event-date {
+      display: inline-flex !important;
+      vertical-align: 0.08em;
+    }
+
+    .gf-topic-title-line .title {
+      display: inline !important;
+    }
+
+    .gf-topic-title-line .badge-notification,
+    .gf-topic-title-line .unread-indicator,
+    .gf-topic-title-line .topic-post-badges .badge-notification {
+      box-sizing: border-box;
+      min-width: 17px;
+      width: auto;
+      height: 17px;
+      padding: 0 4px;
+      border-radius: 999px;
+      font-size: 10px;
+      line-height: 17px;
+      align-items: center;
+      justify-content: center;
+      margin-inline: 3px 0;
+    }
+  }
+}
