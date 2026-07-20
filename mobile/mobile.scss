@@ -559,8 +559,26 @@ div.cooked {
     display: block !important;
     box-sizing: border-box;
     width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
     padding: 14px 14px 12px !important;
     border: 0 !important;
+  }
+
+  // Override Discourse's mobile main-link width cap so the title and metadata
+  // use all space between the author avatar and the card edge.
+  > tbody.topic-list-body > tr.topic-list-item > td.main-link.gf-topic-cell,
+  .gf-topic-cell .main-link,
+  .gf-topic-row,
+  .gf-topic-left,
+  .gf-topic-copy {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .gf-topic-copy {
+    flex: 1 1 0 !important;
   }
 
   .gf-op-avatar {
@@ -618,30 +636,32 @@ div.cooked {
   .gf-stat-box {
     display: flex;
     align-items: center;
-    gap: 5px;
-    min-width: 54px;
-    padding: 0 10px 0 0;
+    gap: 4px;
+    min-width: 44px;
+    padding: 0 7px 0 0;
     border-radius: 0;
     background: transparent;
     text-align: left;
   }
 
   .gf-stat-box + .gf-stat-box {
-    padding-left: 10px;
+    padding-left: 7px;
     border-left: 1px solid var(--primary-low);
   }
 
-  .gf-stat-box::before {
-    font-size: 1em;
+  .gf-stat-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
     color: var(--primary-medium);
+    line-height: 1;
   }
 
-  .gf-stat-posts::before {
-    content: "💬";
-  }
-
-  .gf-stat-views::before {
-    content: "◉";
+  .gf-stat-icon .d-icon {
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
   }
 
   .gf-stat-number {
@@ -657,14 +677,14 @@ div.cooked {
   .gf-last-post-summary {
     display: grid;
     position: static;
-    grid-template-columns: 26px auto minmax(0, 1fr);
+    grid-template-columns: 22px auto minmax(0, 1fr);
     align-items: center;
     column-gap: 7px;
     flex: 1 1 auto;
     width: auto;
     min-width: 0;
     max-width: none;
-    min-height: 26px;
+    min-height: 22px;
     margin: 0 0 0 10px;
     padding: 0 0 0 10px;
     overflow: hidden;
@@ -674,10 +694,13 @@ div.cooked {
   .gf-last-avatar-inline,
   .gf-last-avatar-inline a,
   .gf-last-avatar-inline img.avatar {
-    width: 26px;
-    height: 26px;
-    max-width: 26px;
-    max-height: 26px;
+    display: block;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    max-width: 22px;
+    max-height: 22px;
+    overflow: hidden;
   }
 
   .gf-last-avatar-inline img.avatar {
@@ -726,21 +749,39 @@ div.cooked {
   }
 }
 
+// Give Discourse's “last visit” separator breathing room between cards.
+.topic-list:not(.bulk-select-enabled) {
+  > tbody.topic-list-body > tr.topic-list-item-separator {
+    display: block;
+    margin: 5px 0 12px;
+    border: 0;
+    background: transparent;
+  }
+
+  > tbody.topic-list-body > tr.topic-list-item-separator > td {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 4px 14px 6px !important;
+    border: 0 !important;
+  }
+}
+
 @media (max-width: 430px) {
   .topic-list:not(.bulk-select-enabled) {
     .gf-last-post-summary {
-      grid-template-columns: 26px auto minmax(0, 1fr);
-      margin-left: 6px;
-      padding-left: 6px;
+      grid-template-columns: 22px auto minmax(0, 1fr);
+      margin-left: 5px;
+      padding-left: 5px;
     }
 
     .gf-stat-box {
-      min-width: 46px;
-      padding-right: 7px;
+      min-width: 40px;
+      padding-right: 5px;
     }
 
     .gf-stat-box + .gf-stat-box {
-      padding-left: 7px;
+      padding-left: 5px;
     }
   }
 }

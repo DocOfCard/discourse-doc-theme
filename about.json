@@ -4,7 +4,7 @@
   "license_url": "https://github.com/discourse/graceful/blob/main/LICENSE",
   "about_url": "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040",
   "authors": null,
-  "theme_version": "12.1.0",
+  "theme_version": "12.1.1",
   "minimum_discourse_version": null,
   "maximum_discourse_version": null,
   "assets": {
@@ -20,7 +20,7 @@
       "header_background": "ffffff",
       "header_primary": "333333",
       "highlight": "d4efd8",
-      "selected": "edf3ee",
+      "selected": "edf3ee"
       "hover": "f2f2f2",
       "danger": "f8745c",
       "success": "41e254",
@@ -43,5 +43,5 @@
   },
   "modifiers": {},
   "learn_more": "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966",
-  "version": "12.1.0"
+  "version": "12.1.1"
 }

@@ -376,11 +376,13 @@ const GracefulLastPostCell = <template>
   <td class="topic-list-data gf-last-post-cell">
     <div class="gf-desktop-stats">
       <div class="gf-stat-box gf-stat-posts">
+        <span class="gf-stat-icon" aria-hidden="true">{{dIcon "comment"}}</span>
         <span class={{concat "gf-stat-number " (gfPostsHeatClass @topic)}}>{{@topic.replyCount}}</span>
         <span class="gf-stat-label">POSTS</span>
       </div>
 
       <div class="gf-stat-box gf-stat-views">
+        <span class="gf-stat-icon" aria-hidden="true">{{dIcon "far-eye"}}</span>
         <span class={{concat "gf-stat-number " (gfViewsHeatClass @topic)}}>{{@topic.views}}</span>
         <span class="gf-stat-label">VIEWS</span>
       </div>
