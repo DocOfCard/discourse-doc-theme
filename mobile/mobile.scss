@@ -1096,3 +1096,23 @@ div.cooked {
     }
   }
 }
+
+// v12.1.6 mobile: keep the compact badge, but remove the extra spacing
+// introduced by the previous title-flow refinements.
+@media screen and (max-width: 767px) {
+  #main-outlet .topic-list {
+    .gf-topic-title-line .header-topic-title-suffix-outlet,
+    .gf-topic-title-line .topic-post-badges,
+    .gf-topic-title-line .unread-indicator,
+    .gf-topic-title-line .gf-topic-access-badge,
+    .gf-topic-title-line .event-date {
+      margin-inline-start: 0;
+    }
+
+    .gf-topic-title-line .badge-notification,
+    .gf-topic-title-line .unread-indicator,
+    .gf-topic-title-line .topic-post-badges .badge-notification {
+      margin-inline: 0;
+    }
+  }
+}
