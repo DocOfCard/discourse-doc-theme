@@ -171,10 +171,6 @@ function ensureObserver() {
 }
 
 const lazyExcerpt = modifier((element, [topic]) => {
-  if (isMobileView()) {
-    return;
-  }
-
   const topicId = Number.parseInt(topic?.id || topic?.get?.("id") || "0", 10);
   const lastPostUrl = topic?.lastPostUrl || topic?.get?.("lastPostUrl") || "";
   const replyCount = Number.parseInt(
