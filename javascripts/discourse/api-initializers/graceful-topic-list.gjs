@@ -308,10 +308,76 @@ async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
   return promise;
 }
 
+let desktopExcerptObserver = null;
+
+function loadDesktopReplyExcerpt(excerptNode) {
+  if (!excerptNode || excerptNode.dataset.gfExcerptLoaded === "true") {
+    return;
+  }
+
+  const topicId = Number.parseInt(excerptNode.dataset.gfTopicId || "0", 10);
+  const lastPostUrl = excerptNode.dataset.gfLastPostUrl || "";
+
+  if (!topicId || !lastPostUrl) {
+    return;
+  }
+
+  excerptNode.dataset.gfExcerptLoaded = "true";
+  delete excerptNode.dataset.gfExcerptObserved;
+
+  fetchLastReplyExcerpt(topicId, lastPostUrl).then((result) => {
+    if (!result?.excerpt || !excerptNode.isConnected) {
+      return;
+    }
+
+    const replyUrl = gfReplyUrl(lastPostUrl, result.postNumber);
+
+    if (!replyUrl) {
+      excerptNode.textContent = result.excerpt;
+      return;
+    }
+
+    const link = document.createElement("a");
+    link.className = "gf-last-reply-link";
+    link.href = replyUrl;
+    link.textContent = result.excerpt;
+
+    excerptNode.replaceChildren(link);
+  });
+}
+
+function ensureDesktopExcerptObserver() {
+  if (desktopExcerptObserver || typeof IntersectionObserver === "undefined") {
+    return desktopExcerptObserver;
+  }
+
+  desktopExcerptObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        desktopExcerptObserver?.unobserve(entry.target);
+        loadDesktopReplyExcerpt(entry.target);
+      });
+    },
+    {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.01,
+    }
+  );
+
+  return desktopExcerptObserver;
+}
+
 function patchDesktopReplyExcerpts() {
   if (gfIsMobileView()) {
     return;
   }
+
+  const observer = ensureDesktopExcerptObserver();
 
   document
     .querySelectorAll(".topic-list tbody.topic-list-body > tr.topic-list-item")
@@ -321,39 +387,44 @@ function patchDesktopReplyExcerpts() {
       const repliesText = row.querySelector(".gf-stat-posts .gf-stat-number")?.textContent || "0";
       const replies = Number.parseInt(repliesText.trim(), 10) || 0;
 
-      if (!topicId || !excerptNode || replies <= 0 || excerptNode.dataset.gfExcerptLoaded === "true") {
+      if (
+        !topicId ||
+        !excerptNode ||
+        replies <= 0 ||
+        excerptNode.dataset.gfExcerptLoaded === "true" ||
+        excerptNode.dataset.gfExcerptObserved === "true"
+      ) {
         return;
       }
 
-      const lastPostUrl = row.querySelector(".gf-last-date")?.getAttribute("href");
+      const lastPostUrl = row.querySelector(".gf-last-date")?.getAttribute("href") || "";
+      if (!lastPostUrl) {
+        return;
+      }
 
-      excerptNode.dataset.gfExcerptLoaded = "true";
-      fetchLastReplyExcerpt(topicId, lastPostUrl).then((result) => {
-        if (!result?.excerpt) {
-          return;
-        }
+      excerptNode.dataset.gfTopicId = String(topicId);
+      excerptNode.dataset.gfLastPostUrl = lastPostUrl;
 
-        const replyUrl = gfReplyUrl(lastPostUrl, result.postNumber);
+      if (!observer) {
+        loadDesktopReplyExcerpt(excerptNode);
+        return;
+      }
 
-        if (!replyUrl) {
-          excerptNode.textContent = result.excerpt;
-          return;
-        }
-
-        const link = document.createElement("a");
-        link.className = "gf-last-reply-link";
-        link.href = replyUrl;
-        link.textContent = result.excerpt;
-
-        excerptNode.replaceChildren(link);
-      });
+      excerptNode.dataset.gfExcerptObserved = "true";
+      observer.observe(excerptNode);
     });
 }
 
 function resetDesktopReplyExcerptMarkers() {
-  document.querySelectorAll(".gf-last-reply-excerpt[data-gf-excerpt-loaded]").forEach((node) => {
-    delete node.dataset.gfExcerptLoaded;
-  });
+  document
+    .querySelectorAll(".gf-last-reply-excerpt[data-gf-excerpt-loaded], .gf-last-reply-excerpt[data-gf-excerpt-observed]")
+    .forEach((node) => {
+      desktopExcerptObserver?.unobserve(node);
+      delete node.dataset.gfExcerptLoaded;
+      delete node.dataset.gfExcerptObserved;
+      delete node.dataset.gfTopicId;
+      delete node.dataset.gfLastPostUrl;
+    });
 }
 
 
@@ -608,6 +679,9 @@ export default apiInitializer((api) => {
   globalThis[GF_CLEANUP_KEY] = () => {
     clearTimeout(patchTimer);
     clearTimeout(patchFollowupTimer);
+
+    desktopExcerptObserver?.disconnect();
+    desktopExcerptObserver = null;
 
     if (patchFrame) {
       cancelAnimationFrame(patchFrame);
