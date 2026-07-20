@@ -276,7 +276,7 @@ const GracefulTopicCell = <template>
               {{/if}}
             {{else}}
               <TopicPostBadges
-                @unreadPosts={{@topic.unread_posts}}
+                @unreadPosts={{@topic.unreadPosts}}
                 @unseen={{@topic.unseen}}
                 @url={{@topic.lastUnreadUrl}}
               />
