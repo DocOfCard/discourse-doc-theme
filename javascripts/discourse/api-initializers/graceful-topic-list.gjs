@@ -19,8 +19,6 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { longDate } from "discourse/lib/formatter";
 
-const GF_CLEANUP_KEY = "__gracefulTopicListCleanup";
-
 let gfSiteSettings;
 
 const gfTitleFocus = modifier((element) => {
@@ -309,21 +307,18 @@ async function fetchLastReplyExcerpt(topicId, lastPostUrl) {
 }
 
 let desktopExcerptObserver = null;
+const desktopExcerptTargets = new WeakMap();
 
-function loadDesktopReplyExcerpt(excerptNode) {
+function loadDesktopReplyExcerpt(excerptNode, topicId, lastPostUrl) {
   if (!excerptNode || excerptNode.dataset.gfExcerptLoaded === "true") {
     return;
   }
-
-  const topicId = Number.parseInt(excerptNode.dataset.gfTopicId || "0", 10);
-  const lastPostUrl = excerptNode.dataset.gfLastPostUrl || "";
 
   if (!topicId || !lastPostUrl) {
     return;
   }
 
   excerptNode.dataset.gfExcerptLoaded = "true";
-  delete excerptNode.dataset.gfExcerptObserved;
 
   fetchLastReplyExcerpt(topicId, lastPostUrl).then((result) => {
     if (!result?.excerpt || !excerptNode.isConnected) {
@@ -353,14 +348,24 @@ function ensureDesktopExcerptObserver() {
 
   desktopExcerptObserver = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
+      for (const entry of entries) {
         if (!entry.isIntersecting) {
-          return;
+          continue;
         }
 
-        desktopExcerptObserver?.unobserve(entry.target);
-        loadDesktopReplyExcerpt(entry.target);
-      });
+        desktopExcerptObserver.unobserve(entry.target);
+
+        const target = desktopExcerptTargets.get(entry.target);
+        if (!target) {
+          continue;
+        }
+
+        loadDesktopReplyExcerpt(
+          entry.target,
+          target.topicId,
+          target.lastPostUrl
+        );
+      }
     },
     {
       root: null,
@@ -372,61 +377,39 @@ function ensureDesktopExcerptObserver() {
   return desktopExcerptObserver;
 }
 
-function patchDesktopReplyExcerpts() {
+const gfLazyExcerpt = modifier((element, [topic]) => {
   if (gfIsMobileView()) {
     return;
   }
 
+  const topicId = Number.parseInt(
+    topic?.id || topic?.get?.("id") || "0",
+    10
+  );
+  const lastPostUrl = topic?.lastPostUrl || topic?.get?.("lastPostUrl") || "";
+  const replyCount = Number.parseInt(
+    topic?.replyCount || topic?.get?.("replyCount") || "0",
+    10
+  );
+
+  if (!topicId || !lastPostUrl || replyCount <= 0) {
+    return;
+  }
+
+  desktopExcerptTargets.set(element, { topicId, lastPostUrl });
+
   const observer = ensureDesktopExcerptObserver();
+  if (observer) {
+    observer.observe(element);
+  } else {
+    loadDesktopReplyExcerpt(element, topicId, lastPostUrl);
+  }
 
-  document
-    .querySelectorAll(".topic-list tbody.topic-list-body > tr.topic-list-item")
-    .forEach((row) => {
-      const topicId = Number.parseInt(row.dataset.topicId || "0", 10);
-      const excerptNode = row.querySelector(".gf-last-reply-excerpt");
-      const repliesText = row.querySelector(".gf-stat-posts .gf-stat-number")?.textContent || "0";
-      const replies = Number.parseInt(repliesText.trim(), 10) || 0;
-
-      if (
-        !topicId ||
-        !excerptNode ||
-        replies <= 0 ||
-        excerptNode.dataset.gfExcerptLoaded === "true" ||
-        excerptNode.dataset.gfExcerptObserved === "true"
-      ) {
-        return;
-      }
-
-      const lastPostUrl = row.querySelector(".gf-last-date")?.getAttribute("href") || "";
-      if (!lastPostUrl) {
-        return;
-      }
-
-      excerptNode.dataset.gfTopicId = String(topicId);
-      excerptNode.dataset.gfLastPostUrl = lastPostUrl;
-
-      if (!observer) {
-        loadDesktopReplyExcerpt(excerptNode);
-        return;
-      }
-
-      excerptNode.dataset.gfExcerptObserved = "true";
-      observer.observe(excerptNode);
-    });
-}
-
-function resetDesktopReplyExcerptMarkers() {
-  document
-    .querySelectorAll(".gf-last-reply-excerpt[data-gf-excerpt-loaded], .gf-last-reply-excerpt[data-gf-excerpt-observed]")
-    .forEach((node) => {
-      desktopExcerptObserver?.unobserve(node);
-      delete node.dataset.gfExcerptLoaded;
-      delete node.dataset.gfExcerptObserved;
-      delete node.dataset.gfTopicId;
-      delete node.dataset.gfLastPostUrl;
-    });
-}
-
+  return () => {
+    desktopExcerptObserver?.unobserve(element);
+    desktopExcerptTargets.delete(element);
+  };
+});
 
 const GracefulTopicCell = <template>
   <td class="main-link topic-list-data gf-topic-cell">
@@ -604,7 +587,7 @@ const GracefulLastPostCell = <template>
             {{/if}}
           </div>
 
-          <div class="gf-last-reply-excerpt">
+          <div class="gf-last-reply-excerpt" {{gfLazyExcerpt @topic}}>
             {{#if @topic.lastPosterUser}}
               <DUserLink class="gf-last-author" @username={{@topic.lastPosterUser.username}}>
                 {{@topic.lastPosterUser.username}}
@@ -621,80 +604,6 @@ const GracefulLastPostCell = <template>
 
 export default apiInitializer((api) => {
   gfSiteSettings = api.container.lookup("service:site-settings");
-  globalThis[GF_CLEANUP_KEY]?.();
-
-  let patchTimer = null;
-  let patchFrame = null;
-  let patchFollowupTimer = null;
-  const cleanupCallbacks = [];
-
-  const runTopicListPatches = () => {
-    patchFrame = null;
-
-    if (!gfIsMobileView()) {
-      patchDesktopReplyExcerpts();
-    }
-  };
-
-  const scheduleTopicListPatches = ({ resetExcerpts = false } = {}) => {
-    if (resetExcerpts) {
-      resetDesktopReplyExcerptMarkers();
-    }
-
-    clearTimeout(patchTimer);
-    clearTimeout(patchFollowupTimer);
-
-    if (patchFrame) {
-      cancelAnimationFrame(patchFrame);
-      patchFrame = null;
-    }
-
-    patchTimer = setTimeout(() => {
-      patchFrame = requestAnimationFrame(() => {
-        runTopicListPatches();
-        patchFollowupTimer = setTimeout(runTopicListPatches, 250);
-      });
-    }, 30);
-  };
-
-  const htmlClassObserver = new MutationObserver(() =>
-    scheduleTopicListPatches({ resetExcerpts: true })
-  );
-  htmlClassObserver.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  cleanupCallbacks.push(() => htmlClassObserver.disconnect());
-
-  const viewportHandler = () => scheduleTopicListPatches({ resetExcerpts: true });
-  window.addEventListener("resize", viewportHandler, { passive: true });
-  window.addEventListener("orientationchange", viewportHandler, { passive: true });
-  window.visualViewport?.addEventListener("resize", viewportHandler, { passive: true });
-  cleanupCallbacks.push(() => {
-    window.removeEventListener("resize", viewportHandler);
-    window.removeEventListener("orientationchange", viewportHandler);
-    window.visualViewport?.removeEventListener("resize", viewportHandler);
-  });
-
-  globalThis[GF_CLEANUP_KEY] = () => {
-    clearTimeout(patchTimer);
-    clearTimeout(patchFollowupTimer);
-
-    desktopExcerptObserver?.disconnect();
-    desktopExcerptObserver = null;
-
-    if (patchFrame) {
-      cancelAnimationFrame(patchFrame);
-      patchFrame = null;
-    }
-
-    cleanupCallbacks.splice(0).forEach((callback) => callback());
-    delete globalThis[GF_CLEANUP_KEY];
-  };
-
-  api.onPageChange(() => {
-    scheduleTopicListPatches({ resetExcerpts: true });
-  });
 
   api.registerValueTransformer(
     "topic-list-item-mobile-layout",
@@ -714,11 +623,5 @@ export default apiInitializer((api) => {
       header: GracefulLastPostHeader,
       item: GracefulLastPostCell,
     });
-
-    requestAnimationFrame(() => {
-      scheduleTopicListPatches({ resetExcerpts: true });
-    });
   });
-
-  scheduleTopicListPatches({ resetExcerpts: true });
 });
