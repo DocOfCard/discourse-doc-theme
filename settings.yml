@@ -14,3 +14,14 @@ enable_topic_excerpt_fallback:
   description:
     zh_CN: 插件摘要不可用时由主题生成摘要
     en: Generate excerpts in the theme when plugin excerpts are unavailable
+
+
+topic_excerpt_lines:
+  default: 1
+  type: enum
+  choices:
+    - 1
+    - 2
+  description:
+    zh_CN: 话题列表摘要显示行数
+    en: Topic list excerpt lines

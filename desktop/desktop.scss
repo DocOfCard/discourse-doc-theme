@@ -607,7 +607,7 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
     overflow-wrap: anywhere;
     word-break: break-word;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: #{$topic_excerpt_lines};
     color: inherit;
     text-decoration: none;
   }
