@@ -274,9 +274,9 @@ const GracefulTopicCell = <template>
               {{#if @topic.has_new_replies}}
                 <NewRepliesDot @topic={{@topic}} />
               {{/if}}
-            {{else}}
+            {{else if @showTopicPostBadges}}
               <TopicPostBadges
-                @unreadPosts={{@topic.unreadPosts}}
+                @unreadPosts={{@topic.unread_posts}}
                 @unseen={{@topic.unseen}}
                 @url={{@topic.lastUnreadUrl}}
               />
