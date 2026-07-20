@@ -130,6 +130,8 @@ function loadReplyExcerpt(element, topicId, lastPostUrl) {
       return;
     }
 
+    element.querySelector(".gf-last-author")?.remove();
+
     const url = replyUrl(lastPostUrl, result.postNumber);
     if (!url) {
       element.append(document.createTextNode(result.excerpt));
