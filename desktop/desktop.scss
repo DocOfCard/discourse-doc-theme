@@ -670,8 +670,8 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
   pointer-events: none;
 }
 
-// v12.1.6 desktop: normalize the unread-count badge shape without
-// changing its existing size or spacing.
+// v12.1.8 desktop: keep the existing badge scale and spacing, but prevent
+// a single unread digit from becoming a tall vertical pill.
 #main-outlet .topic-list .gf-topic-title {
   .topic-post-badges .badge-notification.unread-posts,
   .badge-notification.unread-posts {
@@ -679,6 +679,10 @@ body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
+    min-width: 1.5em;
+    height: 1.5em;
+    padding-block: 0;
+    padding-inline: 0.38em;
     border-radius: 999px;
     line-height: 1;
     vertical-align: middle;
