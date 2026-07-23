@@ -1,0 +1,3 @@
+zh_CN:
+  theme_metadata:
+    description: "一个轻量、优雅的 Discourse 主题。此版本为 DocOfCard 修改版，优化了桌面端和移动端布局，并原生适配 Discourse Topic Access 插件提供的权限感知话题摘要。"
