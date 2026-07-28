@@ -1,5 +1,10 @@
 # Changelog
 
+## 12.0.8
+
+- Fixed transparent PNG avatars showing a white background in topic posts.
+- Explicitly keeps the avatar image and its post-stream wrapper elements transparent.
+
 ## 12.0.7
 
 - Renamed the package to **Graceful Theme - DocOfCard Modified Edition**.

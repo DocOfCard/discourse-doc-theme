@@ -554,3 +554,14 @@ body.has-full-page-chat {
     font-size:0.875em;
   }
 }
+
+/* Preserve transparency for uploaded PNG avatars in post streams and user UI. */
+img.avatar,
+.topic-avatar,
+.topic-avatar .post-avatar,
+.topic-avatar .main-avatar,
+.post-avatar,
+.post-avatar .main-avatar {
+  background: transparent !important;
+  background-color: transparent !important;
+}
