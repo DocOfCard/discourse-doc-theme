@@ -1,3 +1,8 @@
+## 12.0.8
+
+- Topic-list title links now honor the DocOfCard per-user “open topic lists and search results in a new tab” preference.
+- This release applies the behavior only to the rebuilt topic list; search results are unchanged for now.
+
 # Changelog
 
 ## 12.0.7
