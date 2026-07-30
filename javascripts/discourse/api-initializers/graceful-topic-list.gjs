@@ -297,7 +297,7 @@ const GracefulTopicCell = <template>
                 {{gfTitleFocus}}
                 href={{gfTopicHref @topic}}
                 data-topic-id={{@topic.id}}
-                class="title raw-link raw-topic-link"
+                class="title raw-link"
                 target="_blank"
                 rel="noopener noreferrer"
               >
