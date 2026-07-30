@@ -1,3 +1,11 @@
+## 12.0.13
+
+- Based directly on 12.0.12.
+- Apply the existing per-user new-tab preference to topic links in the header quick-search popup.
+- Replace the previous MutationObserver/DOM patch with a component-level `search-menu/results/types` override.
+- Preserve Discourse search click logging and native Ctrl/Cmd/middle-click behavior.
+- Do not replace the full-page search implementation from 12.0.12.
+
 ## 12.0.12
 
 - Preserve Discourse full-page search click analytics when the per-user new-tab preference is enabled.

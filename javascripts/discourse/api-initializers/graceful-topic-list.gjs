@@ -26,7 +26,6 @@ import TopicListExcerptTheme from "../components/topic-list-excerpt-theme";
 let gfSiteSettings;
 let gfCurrentUser;
 
-
 const GF_NEW_TAB_FIELD = "docofcard_tools_topic_search_new_tab";
 
 function gfTruthyPreference(value) {
@@ -510,6 +509,63 @@ export default apiInitializer((api) => {
         link.removeAttribute("target");
         link.removeAttribute("rel");
       }
+    },
+  });
+
+  api.modifyClass("component:search-menu/results/types", {
+    pluginId: "graceful-docofcard-quick-search-new-tab",
+
+    onClick({ resultType, result }, event) {
+      if (!gfOpenTopicInNewTabEnabled()) {
+        return this._super({ resultType, result }, event);
+      }
+
+      if (this.args.searchLogId) {
+        logSearchLinkClick({
+          searchLogId: this.args.searchLogId,
+          searchResultId: result.id,
+          searchResultType: resultType.type,
+        });
+      }
+
+      // Keep native Ctrl/Cmd/middle-click behavior. A normal click is opened
+      // explicitly because the core template does not expose a target argument.
+      if (
+        event.shiftKey ||
+        event.metaKey ||
+        event.ctrlKey ||
+        (event.button && event.button !== 0)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      window.open(event.currentTarget.href, "_blank", "noopener,noreferrer");
+    },
+
+    onKeydown(payload, event) {
+      if (!gfOpenTopicInNewTabEnabled() || event.key !== "Enter") {
+        return this._super(payload, event);
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const { resultType, result } = payload;
+      if (this.args.searchLogId) {
+        logSearchLinkClick({
+          searchLogId: this.args.searchLogId,
+          searchResultId: result.id,
+          searchResultType: resultType.type,
+        });
+      }
+
+      const link = event.currentTarget.querySelector("a.search-link");
+      if (link?.href) {
+        window.open(link.href, "_blank", "noopener,noreferrer");
+      }
+
+      return false;
     },
   });
 
