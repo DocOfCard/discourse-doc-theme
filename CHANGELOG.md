@@ -1,8 +1,3 @@
-## 12.0.15
-
-- Fix quick-search topic matching: current Discourse does not render the assumed `.search-result-topic` wrapper.
-- Match all quick-search links and identify topic results by their `/t/` URL.
-
 ## 12.0.14
 
 - Based on the 12.0.12 implementation.
