@@ -32,21 +32,31 @@ function gfTruthyPreference(value) {
   return value === true || value === "true" || value === 1 || value === "1";
 }
 
-const gfOpenTopicInNewTab = modifier((element) => {
+const gfShouldOpenTopicInNewTab = helper(function () {
   const value =
     gfCurrentUser?.[GF_NEW_TAB_FIELD] ??
     gfCurrentUser?.custom_fields?.[GF_NEW_TAB_FIELD];
 
-  if (
+  return Boolean(
     gfSiteSettings?.docofcard_tools_topic_search_new_tab_preference_enabled &&
-    gfTruthyPreference(value)
-  ) {
-    element.setAttribute("target", "_blank");
-    element.setAttribute("rel", "noopener noreferrer");
-  } else {
-    element.removeAttribute("target");
-    element.removeAttribute("rel");
-  }
+      gfTruthyPreference(value)
+  );
+});
+
+const gfTopicHref = helper(function ([topic]) {
+  return (
+    topic?.lastUnreadUrl ??
+    topic?.last_unread_url ??
+    topic?.url ??
+    topic?.get?.("lastUnreadUrl") ??
+    topic?.get?.("last_unread_url") ??
+    topic?.get?.("url") ??
+    `/t/${topic?.slug || "topic"}/${topic?.id}`
+  );
+});
+
+const gfTopicTitle = helper(function ([topic]) {
+  return htmlSafe(topic?.fancyTitle ?? topic?.title ?? "");
 });
 
 const gfTitleFocus = modifier((element) => {
@@ -282,12 +292,24 @@ const GracefulTopicCell = <template>
               @outletArgs={{lazyHash topic=@topic}}
             />
             <TopicStatus @topic={{@topic}} @context="topic-list" />
-            <TopicLink
-              {{gfTitleFocus}}
-              {{gfOpenTopicInNewTab}}
-              @topic={{@topic}}
-              class="title raw-link raw-topic-link"
-            />
+            {{#if (gfShouldOpenTopicInNewTab)}}
+              <a
+                {{gfTitleFocus}}
+                href={{gfTopicHref @topic}}
+                data-topic-id={{@topic.id}}
+                class="title raw-link raw-topic-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{gfTopicTitle @topic}}
+              </a>
+            {{else}}
+              <TopicLink
+                {{gfTitleFocus}}
+                @topic={{@topic}}
+                class="title raw-link raw-topic-link"
+              />
+            {{/if}}
             {{#if @topic.featured_link}}
               &nbsp;{{topicFeaturedLink @topic}}
             {{/if}}
