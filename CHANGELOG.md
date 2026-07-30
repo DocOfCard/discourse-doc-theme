@@ -1,3 +1,8 @@
+## 12.0.9
+
+- Fix topic-list new-tab behavior by applying the modifier to the real wrapper element and then updating the rendered TopicLink anchor.
+- Read the per-user field from both direct and custom_fields locations.
+
 ## 12.0.8
 
 - Topic-list title links now honor the DocOfCard per-user “open topic lists and search results in a new tab” preference.
