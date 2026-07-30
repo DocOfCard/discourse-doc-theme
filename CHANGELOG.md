@@ -1,3 +1,10 @@
+## 12.0.14
+
+- Based on the 12.0.12 implementation.
+- Fix header quick-search topic links using a capture-phase click handler instead of `api.modifyClass`.
+- Set `target="_blank"` before Discourse's native click handler runs, so core click logging and `wantsNewWindow()` behavior are preserved.
+- No `MutationObserver`, DOM polling, or component monkey patch is used.
+
 ## 12.0.13
 
 - Based directly on 12.0.12.

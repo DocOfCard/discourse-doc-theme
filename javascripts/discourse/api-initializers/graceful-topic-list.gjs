@@ -512,62 +512,26 @@ export default apiInitializer((api) => {
     },
   });
 
-  api.modifyClass("component:search-menu/results/types", {
-    pluginId: "graceful-docofcard-quick-search-new-tab",
+  const quickSearchClickCapture = (event) => {
+    const link = event.target?.closest?.(
+      ".search-menu .results .search-result-topic a.search-link"
+    );
 
-    onClick({ resultType, result }, event) {
-      if (!gfOpenTopicInNewTabEnabled()) {
-        return this._super({ resultType, result }, event);
-      }
+    if (!link) {
+      return;
+    }
 
-      if (this.args.searchLogId) {
-        logSearchLinkClick({
-          searchLogId: this.args.searchLogId,
-          searchResultId: result.id,
-          searchResultType: resultType.type,
-        });
-      }
+    if (gfOpenTopicInNewTabEnabled()) {
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener noreferrer");
+    } else {
+      link.removeAttribute("target");
+      link.removeAttribute("rel");
+    }
+  };
 
-      // Keep native Ctrl/Cmd/middle-click behavior. A normal click is opened
-      // explicitly because the core template does not expose a target argument.
-      if (
-        event.shiftKey ||
-        event.metaKey ||
-        event.ctrlKey ||
-        (event.button && event.button !== 0)
-      ) {
-        return;
-      }
+  document.addEventListener("click", quickSearchClickCapture, true);
 
-      event.preventDefault();
-      window.open(event.currentTarget.href, "_blank", "noopener,noreferrer");
-    },
-
-    onKeydown(payload, event) {
-      if (!gfOpenTopicInNewTabEnabled() || event.key !== "Enter") {
-        return this._super(payload, event);
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      const { resultType, result } = payload;
-      if (this.args.searchLogId) {
-        logSearchLinkClick({
-          searchLogId: this.args.searchLogId,
-          searchResultId: result.id,
-          searchResultType: resultType.type,
-        });
-      }
-
-      const link = event.currentTarget.querySelector("a.search-link");
-      if (link?.href) {
-        window.open(link.href, "_blank", "noopener,noreferrer");
-      }
-
-      return false;
-    },
-  });
 
   api.registerValueTransformer(
     "topic-list-item-mobile-layout",
