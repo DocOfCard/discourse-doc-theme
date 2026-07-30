@@ -19,6 +19,7 @@ import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { longDate } from "discourse/lib/formatter";
+import { logSearchLinkClick } from "discourse/lib/search";
 import TopicListExcerptPlugin from "../components/topic-list-excerpt-plugin";
 import TopicListExcerptTheme from "../components/topic-list-excerpt-theme";
 
@@ -32,7 +33,7 @@ function gfTruthyPreference(value) {
   return value === true || value === "true" || value === 1 || value === "1";
 }
 
-const gfShouldOpenTopicInNewTab = helper(function () {
+function gfOpenTopicInNewTabEnabled() {
   const value =
     gfCurrentUser?.[GF_NEW_TAB_FIELD] ??
     gfCurrentUser?.custom_fields?.[GF_NEW_TAB_FIELD];
@@ -41,6 +42,10 @@ const gfShouldOpenTopicInNewTab = helper(function () {
     gfSiteSettings?.docofcard_tools_topic_search_new_tab_preference_enabled &&
       gfTruthyPreference(value)
   );
+}
+
+const gfShouldOpenTopicInNewTab = helper(function () {
+  return gfOpenTopicInNewTabEnabled();
 });
 
 const gfTopicHref = helper(function ([topic]) {
@@ -472,6 +477,41 @@ const GracefulLastPostCell = <template>
 export default apiInitializer((api) => {
   gfSiteSettings = api.container.lookup("service:site-settings");
   gfCurrentUser = api.getCurrentUser();
+
+  api.modifyClass("component:search-result-entry", {
+    pluginId: "graceful-docofcard-search-new-tab",
+
+    logClick(topicId, event) {
+      if (!gfOpenTopicInNewTabEnabled()) {
+        return this._super(topicId, event);
+      }
+
+      if (this.searchLogId && topicId) {
+        logSearchLinkClick({
+          searchLogId: this.searchLogId,
+          searchResultId: topicId,
+          searchResultType: "topic",
+        });
+      }
+    },
+
+    didRender() {
+      this._super(...arguments);
+
+      const link = this.element?.querySelector("a.search-link");
+      if (!link) {
+        return;
+      }
+
+      if (gfOpenTopicInNewTabEnabled()) {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noopener noreferrer");
+      } else {
+        link.removeAttribute("target");
+        link.removeAttribute("rel");
+      }
+    },
+  });
 
   api.registerValueTransformer(
     "topic-list-item-mobile-layout",

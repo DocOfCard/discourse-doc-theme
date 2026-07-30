@@ -1,3 +1,14 @@
+## 12.0.12
+
+- Preserve Discourse full-page search click analytics when the per-user new-tab preference is enabled.
+- Search result links still use native `target="_blank"` navigation without preventing the browser's default action.
+- When the preference is disabled, the original Discourse click handler remains unchanged.
+
+## 12.0.11
+
+- Apply the existing per-user new-tab preference to full-page search result topic links.
+- Search result links remain native anchors and only receive `target`/`rel` attributes; no global click interception is used.
+
 ## 12.0.8
 
 - Topic-list title links now honor the DocOfCard per-user “open topic lists and search results in a new tab” preference.
