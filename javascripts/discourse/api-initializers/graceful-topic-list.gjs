@@ -514,10 +514,23 @@ export default apiInitializer((api) => {
 
   const quickSearchClickCapture = (event) => {
     const link = event.target?.closest?.(
-      ".search-menu .results .search-result-topic a.search-link"
+      ".search-menu .results a.search-link"
     );
 
     if (!link) {
+      return;
+    }
+
+    let isTopicLink = false;
+    try {
+      isTopicLink = new URL(link.href, window.location.origin).pathname.startsWith(
+        "/t/"
+      );
+    } catch {
+      return;
+    }
+
+    if (!isTopicLink) {
       return;
     }
 
