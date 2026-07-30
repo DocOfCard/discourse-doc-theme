@@ -1,3 +1,9 @@
+## 12.0.13
+
+- 修复搜索结果页新标签页设置未稳定生效的问题。
+- 改为在搜索结果异步渲染后仅补充 `target`/`rel` 属性。
+- 保留 Discourse 原生搜索点击处理与点击统计，不覆盖 `logClick`。
+
 ## 12.0.12
 
 - Preserve Discourse full-page search click analytics when the per-user new-tab preference is enabled.

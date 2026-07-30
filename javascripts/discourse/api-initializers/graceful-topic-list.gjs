@@ -19,13 +19,12 @@ import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { longDate } from "discourse/lib/formatter";
-import { logSearchLinkClick } from "discourse/lib/search";
 import TopicListExcerptPlugin from "../components/topic-list-excerpt-plugin";
 import TopicListExcerptTheme from "../components/topic-list-excerpt-theme";
 
 let gfSiteSettings;
 let gfCurrentUser;
-
+let gfSearchResultsObserver;
 
 const GF_NEW_TAB_FIELD = "docofcard_tools_topic_search_new_tab";
 
@@ -478,40 +477,29 @@ export default apiInitializer((api) => {
   gfSiteSettings = api.container.lookup("service:site-settings");
   gfCurrentUser = api.getCurrentUser();
 
-  api.modifyClass("component:search-result-entry", {
-    pluginId: "graceful-docofcard-search-new-tab",
+  const updateSearchResultLinks = () => {
+    const openInNewTab = gfOpenTopicInNewTabEnabled();
 
-    logClick(topicId, event) {
-      if (!gfOpenTopicInNewTabEnabled()) {
-        return this._super(topicId, event);
-      }
-
-      if (this.searchLogId && topicId) {
-        logSearchLinkClick({
-          searchLogId: this.searchLogId,
-          searchResultId: topicId,
-          searchResultType: "topic",
-        });
-      }
-    },
-
-    didRender() {
-      this._super(...arguments);
-
-      const link = this.element?.querySelector("a.search-link");
-      if (!link) {
-        return;
-      }
-
-      if (gfOpenTopicInNewTabEnabled()) {
+    document.querySelectorAll(".fps-result a.search-link").forEach((link) => {
+      if (openInNewTab) {
         link.setAttribute("target", "_blank");
         link.setAttribute("rel", "noopener noreferrer");
       } else {
         link.removeAttribute("target");
         link.removeAttribute("rel");
       }
-    },
-  });
+    });
+  };
+
+  // Search results are rendered and appended asynchronously. Observe DOM changes only
+  // to update link attributes; the official click handler remains untouched, so
+  // Discourse search click statistics continue to run normally.
+  gfSearchResultsObserver?.disconnect();
+  gfSearchResultsObserver = new MutationObserver(updateSearchResultLinks);
+  gfSearchResultsObserver.observe(document.body, { childList: true, subtree: true });
+
+  api.onPageChange(updateSearchResultLinks);
+  updateSearchResultLinks();
 
   api.registerValueTransformer(
     "topic-list-item-mobile-layout",
