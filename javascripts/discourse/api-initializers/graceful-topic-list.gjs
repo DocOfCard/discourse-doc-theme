@@ -32,34 +32,20 @@ function gfTruthyPreference(value) {
   return value === true || value === "true" || value === 1 || value === "1";
 }
 
-function gfCurrentUserPreference() {
-  return (
-    gfCurrentUser?.[GF_NEW_TAB_FIELD] ??
-    gfCurrentUser?.get?.(GF_NEW_TAB_FIELD) ??
-    gfCurrentUser?.custom_fields?.[GF_NEW_TAB_FIELD] ??
-    gfCurrentUser?.get?.("custom_fields")?.[GF_NEW_TAB_FIELD]
-  );
-}
-
 const gfOpenTopicInNewTab = modifier((element) => {
-  // TopicLink is a component. A modifier placed directly on it is not
-  // guaranteed to reach the inner <a>. Attach this modifier to a real wrapper
-  // element and update the rendered topic link inside it instead.
-  const link = element.querySelector("a.raw-topic-link, a.title");
-  if (!link) {
-    return;
-  }
+  const value =
+    gfCurrentUser?.[GF_NEW_TAB_FIELD] ??
+    gfCurrentUser?.custom_fields?.[GF_NEW_TAB_FIELD];
 
-  const enabled =
+  if (
     gfSiteSettings?.docofcard_tools_topic_search_new_tab_preference_enabled &&
-    gfTruthyPreference(gfCurrentUserPreference());
-
-  if (enabled) {
-    link.setAttribute("target", "_blank");
-    link.setAttribute("rel", "noopener noreferrer");
+    gfTruthyPreference(value)
+  ) {
+    element.setAttribute("target", "_blank");
+    element.setAttribute("rel", "noopener noreferrer");
   } else {
-    link.removeAttribute("target");
-    link.removeAttribute("rel");
+    element.removeAttribute("target");
+    element.removeAttribute("rel");
   }
 });
 
@@ -290,7 +276,7 @@ const GracefulTopicCell = <template>
             @outletArgs={{lazyHash topic=@topic}}
           />
 
-          <div class="main-link gf-topic-title" {{gfOpenTopicInNewTab}}>
+          <div class="main-link gf-topic-title">
             <PluginOutlet
               @name="topic-list-before-status"
               @outletArgs={{lazyHash topic=@topic}}
@@ -298,6 +284,7 @@ const GracefulTopicCell = <template>
             <TopicStatus @topic={{@topic}} @context="topic-list" />
             <TopicLink
               {{gfTitleFocus}}
+              {{gfOpenTopicInNewTab}}
               @topic={{@topic}}
               class="title raw-link raw-topic-link"
             />
