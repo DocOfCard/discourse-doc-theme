@@ -1,3 +1,7 @@
+## 12.0.17
+
+- 修复 discourse-calendar 简体中文活动结束时间出现重复“后”的问题。
+
 ## 12.0.14
 
 - Based on the 12.0.12 implementation.

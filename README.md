@@ -1,3 +1,8 @@
+## v12.0.17
+
+- 修复 discourse-calendar 在简体中文下将活动结束时间显示为“1 个月后后结束”的问题，现显示为“1 个月后结束”。
+- Fix duplicate “后” in the discourse-calendar event end-time badge for Simplified Chinese.
+
 # Graceful Theme - DocOfCard Modified Edition
 
 [中文说明](#中文说明) | [English](#english)

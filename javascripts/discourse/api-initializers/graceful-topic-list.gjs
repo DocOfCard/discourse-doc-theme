@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { concat } from "@ember/helper";
 import { helper } from "@ember/component/helper";
 import { htmlSafe } from "@ember/template";
@@ -474,6 +475,16 @@ const GracefulLastPostCell = <template>
 </template>;
 
 export default apiInitializer((api) => {
+  // Fix discourse-calendar zh_CN output: “1 个月后后结束” -> “1 个月后结束”.
+  if (I18n.currentLocale() === "zh_CN") {
+    I18n.translations.zh_CN ??= {};
+    I18n.translations.zh_CN.js ??= {};
+    I18n.translations.zh_CN.js.discourse_post_event ??= {};
+    I18n.translations.zh_CN.js.discourse_post_event.topic_title ??= {};
+    I18n.translations.zh_CN.js.discourse_post_event.topic_title.ends_in_duration =
+      "%{duration}结束";
+  }
+
   gfSiteSettings = api.container.lookup("service:site-settings");
   gfCurrentUser = api.getCurrentUser();
 
